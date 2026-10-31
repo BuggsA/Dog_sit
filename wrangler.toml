@@ -16,8 +16,8 @@ run_worker_first = ["/api/*", "/admin", "/admin/*"]
 # ── Database (needed for booking requests + admin) ─────────────────────
 # 1) Create it: Cloudflare dashboard → Storage & databases → D1 → Create,
 #    name it "walks-for-lucy" (or run: npx wrangler d1 create walks-for-lucy)
-# 2) Uncomment the 4 lines below and paste its Database ID.
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "walks-for-lucy"
-# database_id = "paste-id-here"
+# 2) Its Database ID goes below (already connected).
+[[d1_databases]]
+binding = "DB"
+database_name = "walks-for-lucy"
+database_id = "efec6a94-df87-4d81-ac9a-0abca66ae56b"
