@@ -20,6 +20,7 @@ Plain HTML/CSS/JS with no build step, so you can edit any page directly.
 | `public/js/zones.js` | Service-area logic + map town labels |
 | `public/js/zone-data.js` | Generated drive-time areas + ZIP codes (see below) |
 | `scripts/build-zones.mjs` | Rebuilds `zone-data.js` |
+| `public/sitemap.xml`, `public/robots.txt` | For Google. Add any new page to the sitemap |
 | `public/img/icons.svg` | Custom icon set (one file, all icons) |
 | `public/img/` | Photos (location data removed) |
 | `src/worker.js` | Worker entry: routes `/api/*`, locks `/admin` |
@@ -72,6 +73,8 @@ Run the pricing tests with `npm test`.
 - **Photos:** drop new ones into `public/img/`. Resize them to about 1000px wide and strip GPS location first.
 - **Lucy's photo:** save it as `public/img/lucy.jpg` and follow the note in `about.html`. Lucy's story there is a short draft for Anissa to personalize.
 - **Icons:** all icons are original line drawings in `public/img/icons.svg`. Use one with `<svg class="i"><use href="/img/icons.svg#paw"/></svg>`.
+
+- **New page / SEO:** copy the `<head>` of an existing page and change the title, description, canonical URL and `og:` tags. Add the page to `public/sitemap.xml`. Business details for Google (prices, towns served) are in the JSON-LD block in `index.html`. Update it if prices in `pricing.js` change.
 
 ## Photo credits
 
