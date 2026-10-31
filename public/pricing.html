@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pricing & Estimate · Purfect Pet</title>
-  <meta name="description" content="Dog walking from $10, cat visits from $17, overnights from $50. Get an instant estimate for pet sitting in Reston, Fairfax & Loudoun County.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <title>Pricing & Estimate · Walks for Lucy</title>
+  <meta name="description" content="Dog walks from $10, cat visits from $17, overnights from $50. Get an instant estimate for pet sitting in Reston, Fairfax and Loudoun County.">
+  <meta name="theme-color" content="#2f4a3f">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..600,0..100,0..1;1,9..144,400..600,0..100,0..1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <script type="module" src="/js/site.js"></script>
   <script type="module" src="/js/estimator.js"></script>
@@ -16,101 +17,85 @@
 <body>
   <header id="site-header"></header>
   <main>
-    <section>
+    <section style="padding-bottom:48px">
       <div class="container">
-        <h1 class="center">Simple, friendly pricing 💸</h1>
-        <p class="center muted">No surprise fees. Photo updates are always included.</p>
-
-        <div class="grid cols-2" style="margin-top:30px">
-          <div class="card coral">
-            <h2>🦮 Drop-in visits &amp; walks</h2>
-            <table class="price-table" id="visit-prices"></table>
-            <div class="note">
-              <strong>30 min minimum</strong> for visits that include feeding, and for all cats &amp; small pets. 15 min visits are perfect for a quick potty break.
-            </div>
-            <p class="muted">Within about 6 miles of Reston.</p>
-          </div>
-          <div class="card sun">
-            <h2>🌙 Overnights &amp; house sitting</h2>
-            <table class="price-table" id="overnight-prices"></table>
-            <div class="note">
-              During overnights I'm <strong>never away from your pets for more than 5 hours</strong> at a time.
-            </div>
-            <p class="muted">Fairfax County &amp; eastern Loudoun (out to Aldie). Washington, DC overnights +50%.</p>
-          </div>
+        <div class="section-head">
+          <span class="eyebrow">Pricing</span>
+          <h1>Clear, honest pricing</h1>
+          <p class="lead">No booking fees and no surprises. Photo updates are always included.</p>
         </div>
 
-        <div class="grid cols-3" style="margin-top:22px">
-          <div class="card teal">
-            <h3>🤝 Meet &amp; greet</h3>
-            <p><strong>Free</strong> in Fairfax County<br><strong>$10</strong> in Loudoun County</p>
-            <p class="muted">Before your first booking, I come meet your pets and learn their routine.</p>
-          </div>
-          <div class="card grape">
-            <h3>🎂 Puppies &amp; seniors</h3>
-            <p>Dogs <strong>under 1 year</strong> or <strong>over 14 years</strong> need a little extra care. <a href="sms:+15418011068">Text me</a> for custom pricing!</p>
+        <div class="grid cols-2">
+          <div class="card">
+            <div class="icon-badge"><svg class="i"><use href="/img/icons.svg#leash"/></svg></div>
+            <h2 style="font-size:1.7rem">Walks &amp; drop-in visits</h2>
+            <p class="muted small">Within about a 20-minute drive of Reston</p>
+            <table class="price-table" id="visit-prices"></table>
+            <div class="note"><svg class="i"><use href="/img/icons.svg#bowl"/></svg><span><strong>30-minute minimum</strong> for visits that include feeding, and for all cats &amp; small pets.</span></div>
           </div>
           <div class="card">
-            <h3>🎄 Holidays</h3>
-            <p>Holiday dates fill up fast. Please <strong>ask in advance</strong> about availability &amp; holiday pricing.</p>
+            <div class="icon-badge clay"><svg class="i"><use href="/img/icons.svg#moon"/></svg></div>
+            <h2 style="font-size:1.7rem">Overnights &amp; house sitting</h2>
+            <p class="muted small">Per night · Fairfax &amp; eastern Loudoun County, out to Aldie</p>
+            <table class="price-table" id="overnight-prices"></table>
+            <div class="note"><svg class="i"><use href="/img/icons.svg#clock"/></svg><span>Never away from your pets for <strong>more than 5 hours</strong> at a time.</span></div>
           </div>
         </div>
 
-        <div class="card" style="margin-top:22px">
-          <h3>Included with every visit</h3>
-          <ul class="checks grid cols-3" id="included" style="gap:0 22px"></ul>
+        <div class="grid cols-4" style="margin-top:24px">
+          <div class="card"><div class="icon-badge"><svg class="i"><use href="/img/icons.svg#key"/></svg></div><h3>Meet &amp; greet</h3><p class="muted"><strong style="color:var(--forest)">Free</strong> in Fairfax County<br><strong style="color:var(--forest)">$10</strong> in Loudoun County</p></div>
+          <div class="card"><div class="icon-badge"><svg class="i"><use href="/img/icons.svg#home"/></svg></div><h3>Washington, DC</h3><p class="muted">Overnights only, at a <strong style="color:var(--forest)">50%</strong> upcharge.</p></div>
+          <div class="card"><div class="icon-badge clay"><svg class="i"><use href="/img/icons.svg#star"/></svg></div><h3>Puppies &amp; seniors</h3><p class="muted">Dogs under 1 or over 14: <a href="sms:+15418011068">text for a custom quote</a>.</p></div>
+          <div class="card"><div class="icon-badge clay"><svg class="i"><use href="/img/icons.svg#calendar"/></svg></div><h3>Holidays</h3><p class="muted">Please ask in advance about holiday availability &amp; pricing.</p></div>
         </div>
       </div>
     </section>
 
-    <!-- ESTIMATOR -->
-    <section class="band teal" id="estimate">
+    <section class="bg-sage wave-top" id="estimate">
       <div class="container">
-        <h2 class="center">🧮 Rough estimate</h2>
-        <p class="center muted">Play with the options. Anissa confirms the final price with you.</p>
-        <div class="est-grid" style="margin-top:24px">
+        <div class="section-head">
+          <span class="eyebrow">Estimate</span>
+          <h2>See a rough estimate</h2>
+          <p class="lead">Adjust the options below. Anissa will confirm the final price with you.</p>
+        </div>
+        <div class="est-grid">
           <form class="card" id="est-form" onsubmit="return false">
-            <div class="field">
-              <label>What kind of pet?</label>
-              <div class="choice-group" id="pet-choices"></div>
+            <div class="form-section">
+              <span class="label">Your pet</span>
+              <div class="choices" id="pet-choices"></div>
+              <label class="check" id="age-wrap" style="margin-top:14px"><input type="checkbox" id="ageFlag"> My dog is under 1 year or over 14 years old</label>
             </div>
-            <div class="field">
-              <label>What do you need?</label>
-              <div class="choice-group">
-                <input type="radio" name="service" id="svc-visit" value="visit" checked><label for="svc-visit">🦮 Drop-in visits / walks</label>
-                <input type="radio" name="service" id="svc-overnight" value="overnight"><label for="svc-overnight">🌙 Overnights</label>
-              </div>
+            <div class="form-section">
+              <span class="label">Service</span>
+              <div class="choices" id="svc-choices"></div>
             </div>
-            <div class="field" id="visit-fields">
-              <label>Visit length</label>
-              <div class="choice-group" id="minute-choices"></div>
-              <div class="row" style="margin-top:14px">
+            <div class="form-section" id="visit-fields">
+              <span class="label">Visit length</span>
+              <div class="choices" id="minute-choices"></div>
+              <div class="row" style="margin-top:16px">
                 <div><label for="perDay">Visits per day</label><input type="number" id="perDay" min="1" max="6" value="2"></div>
                 <div><label for="days-v">Number of days</label><input type="number" id="days-v" min="1" max="60" value="3"></div>
               </div>
-              <label class="check" style="margin-top:12px"><input type="checkbox" id="feeding" checked> Visits include feeding</label>
+              <label class="check" style="margin-top:14px"><input type="checkbox" id="feeding" checked> Visits include feeding</label>
             </div>
-            <div class="field" id="overnight-fields" hidden>
-              <label>Hours with your pet each night</label>
-              <div class="choice-group" id="hour-choices"></div>
-              <div class="row" style="margin-top:14px">
-                <div><label for="days-o">Number of nights</label><input type="number" id="days-o" min="1" max="60" value="3"></div>
-              </div>
+            <div class="form-section" id="overnight-fields" hidden>
+              <span class="label">Hours with your pet each day</span>
+              <div class="choices" id="hour-choices"></div>
+              <div class="row" style="margin-top:16px"><div><label for="days-o">Number of nights</label><input type="number" id="days-o" min="1" max="60" value="3"></div></div>
             </div>
-            <div class="row">
-              <div class="field"><label for="zip">Your ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" placeholder="20190" autocomplete="postal-code"></div>
+            <div class="form-section">
+              <div class="row"><div><label for="zip">Your ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" placeholder="20190" autocomplete="postal-code"></div></div>
             </div>
-            <label class="check" id="age-wrap"><input type="checkbox" id="ageFlag"> My dog is under 1 year or over 14 years old</label>
           </form>
 
           <aside class="estimate-box" aria-live="polite">
             <h3>Your estimate</h3>
             <div class="total" id="est-total">$0</div>
             <div id="est-lines"></div>
-            <div class="zone" id="est-zone"></div>
+            <div id="est-zone"></div>
             <div id="est-warn"></div>
-            <p style="margin-top:18px"><a class="btn" id="est-book" href="/book">Request these dates →</a></p>
-            <p style="font-size:.85rem;color:#b9bccc">Estimate only. Holidays, multiple pets &amp; special care may change the final price.</p>
+            <p style="margin:22px 0 0"><a class="btn" id="est-book" href="/book" style="width:100%">Request these dates <svg class="i i-arrow"><use href="/img/icons.svg#arrow"/></svg></a></p>
+            <p class="fine">Estimate only. Holidays, multiple pets and special care needs may change the final price.</p>
           </aside>
         </div>
       </div>

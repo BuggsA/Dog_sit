@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Meet Anissa · Purfect Pet</title>
-  <meta name="description" content="Meet Anissa, a dedicated full-time dog walker and pet sitter in Reston, VA since 2019.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <title>About Anissa & Lucy · Walks for Lucy</title>
+  <meta name="description" content="Meet Anissa, a dedicated full-time dog walker and pet sitter in Reston, VA since 2019, and the story behind Walks for Lucy.">
+  <meta name="theme-color" content="#2f4a3f">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..600,0..100,0..1;1,9..144,400..600,0..100,0..1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <script type="module" src="/js/site.js"></script>
 </head>
@@ -16,43 +17,64 @@
   <header id="site-header"></header>
   <main>
     <section>
-      <div class="container grid cols-2" style="align-items:center">
-        <div class="center">
-          <img class="avatar" src="/img/anissa-headshot.jpg" alt="Anissa, smiling outdoors" style="margin:0 auto;width:280px;height:280px">
+      <div class="container split">
+        <div class="hero-photo reveal" style="max-width:440px">
+          <img src="/img/anissa-hero.jpg" alt="Anissa, smiling outdoors" width="1000" height="1250">
         </div>
-        <div>
-          <span class="tag">Full-time pet pal since 2019</span>
-          <h1 style="margin-top:12px">Hi, I'm Anissa! 👋</h1>
-          <p>I'm a dog mom to <em>many</em> dogs (most of them just happen to live with other people 😄). Since 2019, caring for pets has been my full-time job. It's not a side gig, it's what I love.</p>
-          <p>Every pet gets my full attention: walks at their pace, their favorite toys, meds on time, and plenty of belly rubs. You'll get photos every visit so you never have to wonder how they're doing.</p>
-          <p>Dogs are my specialty, but I love cats, birds, guinea pigs and turtles too. And yes, I'll keep your houseplants alive. 🌿</p>
-          <p><a class="btn" href="/book">Book a meet &amp; greet</a></p>
+        <div class="reveal">
+          <span class="eyebrow">About</span>
+          <h1>Hi, I'm <em>Anissa</em></h1>
+          <p class="lead">Since 2019, caring for pets has been my full-time job. Not a side gig and not an app. It's what I do, and I'm dedicated to it.</p>
+          <p>I'm a dog mom to many, many dogs. Most of them just happen to live with other people. I know every one of them by name, along with their favorite walking routes, their treat preferences and exactly where they like a scratch.</p>
+          <p>Dogs are my specialty, but I love caring for cats, birds, guinea pigs and turtles too. And yes, I'll keep your houseplants alive while you're gone.</p>
+          <p>When you book with me, you get <strong>me</strong> every time: one familiar face your pets can trust, and one person who knows your home and routine.</p>
+          <div class="trust" style="margin-top:28px">
+            <div><svg class="i"><use href="/img/icons.svg#heart"/></svg> Full-time since 2019</div>
+            <div><svg class="i"><use href="/img/icons.svg#pin"/></svg> Based in Reston</div>
+            <div><svg class="i"><use href="/img/icons.svg#camera"/></svg> Photos every visit</div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="band coral">
-      <div class="container">
-        <h2 class="center">A few of my favorite moments 📸</h2>
-        <div class="polaroids" style="margin-top:28px">
-          <figure class="polaroid"><img src="/img/anissa-puppy.jpg" alt="Anissa holding a curly apricot puppy" loading="lazy"><figcaption>Puppy cuddles 🥰</figcaption></figure>
-          <figure class="polaroid"><img src="/img/anissa-floor-snuggles.jpg" alt="Anissa on the floor with a scruffy gray and white dog" loading="lazy"><figcaption>Floor time = best time</figcaption></figure>
-          <figure class="polaroid"><img src="/img/anissa-plants.jpg" alt="Anissa peeking over pink hydrangeas" loading="lazy"><figcaption>Plant sitter too 🌸</figcaption></figure>
-          <figure class="polaroid"><img src="/img/anissa-apples.jpg" alt="Anissa apple picking and holding up a green apple" loading="lazy"><figcaption>Apple picking (no apples for pups!) 🍏</figcaption></figure>
+    <section id="lucy" class="bg-paper wave-top">
+      <div class="narrow">
+        <div class="lucy reveal">
+          <!-- To add Lucy's photo: save it as /public/img/lucy.jpg and replace the
+               <svg> below with: <img src="/img/lucy.jpg" alt="Lucy"> -->
+          <div class="lucy-portrait"><svg class="i"><use href="/img/icons.svg#logo"/></svg></div>
+          <div>
+            <span class="eyebrow">In loving memory</span>
+            <h2>Why “Walks for Lucy”</h2>
+            <!-- DRAFT: Anissa, make this your own! A favorite Lucy memory or quirk would be perfect here. -->
+            <p>Lucy was my sweet girl.</p>
+            <p>Losing her reminded me how much our pets mean to us and how much trust it takes to hand over your house key. So I named this business for her. Every walk, every visit and every overnight is a little bit for Lucy.</p>
+            <p class="signature">Love, Anissa</p>
+          </div>
         </div>
       </div>
     </section>
 
     <section>
-      <div class="container" style="max-width:760px">
-        <div class="memorial">
-          <div class="heart" aria-hidden="true">💜</div>
-          <h2>In loving memory of Lucy</h2>
-          <!-- To add Lucy's photo: put it at /public/img/lucy.jpg, then replace the div below with
-               <img class="avatar" src="/img/lucy.jpg" alt="Lucy" style="margin:16px auto"> -->
-          <div class="photo-slot">🐾 Lucy</div>
-          <p>Lucy was my sweet girl. Missing her is a reminder of how much your pets mean to you, and I care for every one of them the way I cared for her.</p>
-          <p class="muted">Run free, sweet girl. 🌈</p>
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">A few favorite moments</span>
+          <h2>Life with lots of animals</h2>
+        </div>
+        <div class="grid cols-3">
+          <img class="photo reveal" src="/img/anissa-puppy.jpg" alt="Anissa cuddling a curly apricot puppy" style="aspect-ratio:4/5" loading="lazy">
+          <img class="photo reveal" src="/img/anissa-plants.jpg" alt="Anissa smiling behind pink hydrangeas in a greenhouse" style="aspect-ratio:4/5" loading="lazy">
+          <img class="photo reveal" src="/img/anissa-apples.jpg" alt="Anissa apple picking on a sunny day" style="aspect-ratio:4/5" loading="lazy">
+        </div>
+      </div>
+    </section>
+
+    <section style="padding-top:0">
+      <div class="container">
+        <div class="cta-band reveal">
+          <svg class="bg-paw"><use href="/img/icons.svg#paw"/></svg>
+          <div><h2>Let's meet your pets</h2><p>Meet &amp; greets are free in Fairfax County and $10 in Loudoun.</p></div>
+          <div class="actions"><a class="btn light" href="/book">Book a meet &amp; greet</a></div>
         </div>
       </div>
     </section>

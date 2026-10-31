@@ -4,46 +4,47 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
-  <title>Admin · Purfect Pet</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <meta name="theme-color" content="#2f4a3f">
+  <title>Dashboard · Walks for Lucy</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..600,0..100,0..1;1,9..144,400..600,0..100,0..1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <script type="module" src="/js/admin.js"></script>
 </head>
 <body>
   <header class="site-header">
     <nav class="container nav">
-      <a class="brand" href="/admin/"><span class="logo">🐾</span><span>Pur<b>fect</b> Pet · Admin</span></a>
-      <a href="/" class="btn ghost small">View site</a>
+      <a class="brand" href="/admin/"><svg class="mark" aria-hidden="true"><use href="/img/icons.svg#logo"/></svg><span><span class="word">Walks <em>for</em> Lucy</span><span class="tag">Dashboard</span></span></a>
+      <a href="/" class="btn outline sm">View site</a>
     </nav>
   </header>
-  <main class="container" style="padding:28px 0 60px">
-    <h1>Hi Anissa! 💛</h1>
-    <div class="admin-bar">
+  <main class="container" style="padding:36px 0 80px">
+    <h1 style="font-size:2.2rem">Hi Anissa</h1>
+    <div class="admin-bar" style="margin:20px 0 8px">
       <div class="tabs" id="tabs">
-        <button data-tab="pending" class="active">📥 Requests</button>
-        <button data-tab="approved">✅ Upcoming</button>
-        <button data-tab="declined">🙅 Declined</button>
-        <button data-tab="calendar">🗓️ Calendar</button>
+        <button data-tab="pending" class="active"><svg class="i"><use href="/img/icons.svg#mail"/></svg>Requests <span class="count" id="pending-count" hidden></span></button>
+        <button data-tab="approved"><svg class="i"><use href="/img/icons.svg#check"/></svg>Upcoming</button>
+        <button data-tab="declined"><svg class="i"><use href="/img/icons.svg#close"/></svg>Declined</button>
+        <button data-tab="calendar"><svg class="i"><use href="/img/icons.svg#calendar"/></svg>Calendar</button>
       </div>
     </div>
 
-    <section id="list-view" style="padding:24px 0">
+    <section id="list-view" style="padding:20px 0">
       <div class="grid" id="req-list"></div>
     </section>
 
-    <section id="cal-view" hidden style="padding:24px 0">
+    <section id="cal-view" hidden style="padding:20px 0">
       <div class="card">
-        <div class="admin-bar" style="margin-bottom:14px">
-          <button class="btn ghost small" id="prev">◀</button>
-          <h2 id="cal-title" style="margin:0"></h2>
-          <button class="btn ghost small" id="next">▶</button>
+        <div class="admin-bar" style="margin-bottom:16px">
+          <button class="btn outline sm" id="prev" aria-label="Previous month">‹</button>
+          <h2 id="cal-title" style="margin:0;font-size:1.6rem"></h2>
+          <button class="btn outline sm" id="next" aria-label="Next month">›</button>
         </div>
-        <p class="muted">Tap a day to block it off (gray = unavailable, shown to clients on the booking page). 🐾 = approved booking.</p>
+        <p class="muted small">Tap a day to block or unblock it. Striped days show as unavailable on the booking page. A dot means an approved booking.</p>
         <div class="cal" id="cal"></div>
-        <div id="day-detail" style="margin-top:18px"></div>
+        <div id="day-detail" style="margin-top:20px"></div>
       </div>
     </section>
   </main>
