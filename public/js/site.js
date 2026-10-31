@@ -28,7 +28,7 @@ if (header) {
   top.className = "topbar";
   top.innerHTML = `
     <div class="container">
-      <span class="hide-sm">Dog walking &amp; pet sitting in Fairfax &amp; Loudoun County since ${BUSINESS.since}</span>
+      <span class="hide-sm">Full-time pet care since ${BUSINESS.since} · Now serving Fairfax &amp; Loudoun County</span>
       <a href="tel:${BUSINESS.phoneHref}">${icon("phone")} ${BUSINESS.phone}</a>
     </div>`;
   header.before(top);
