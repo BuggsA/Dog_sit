@@ -6,7 +6,7 @@
     "dev": "wrangler pages dev",
     "db:local": "wrangler d1 execute walks-for-lucy --local --file=schema.sql",
     "db:remote": "wrangler d1 execute walks-for-lucy --remote --file=schema.sql",
-    "deploy": "wrangler pages deploy",
+    "deploy": "wrangler pages deploy --project-name dog-sit",
     "test": "node --test tests/*.test.js"
   },
   "devDependencies": {
