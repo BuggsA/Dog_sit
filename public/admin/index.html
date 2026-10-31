@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Admin · Purfect Pet</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/admin.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+      <a class="brand" href="/admin/"><span class="logo">🐾</span><span>Pur<b>fect</b> Pet · Admin</span></a>
+      <a href="/" class="btn ghost small">View site</a>
+    </nav>
+  </header>
+  <main class="container" style="padding:28px 0 60px">
+    <h1>Hi Anissa! 💛</h1>
+    <div class="admin-bar">
+      <div class="tabs" id="tabs">
+        <button data-tab="pending" class="active">📥 Requests</button>
+        <button data-tab="approved">✅ Upcoming</button>
+        <button data-tab="declined">🙅 Declined</button>
+        <button data-tab="calendar">🗓️ Calendar</button>
+      </div>
+    </div>
+
+    <section id="list-view" style="padding:24px 0">
+      <div class="grid" id="req-list"></div>
+    </section>
+
+    <section id="cal-view" hidden style="padding:24px 0">
+      <div class="card">
+        <div class="admin-bar" style="margin-bottom:14px">
+          <button class="btn ghost small" id="prev">◀</button>
+          <h2 id="cal-title" style="margin:0"></h2>
+          <button class="btn ghost small" id="next">▶</button>
+        </div>
+        <p class="muted">Tap a day to block it off (gray = unavailable, shown to clients on the booking page). 🐾 = approved booking.</p>
+        <div class="cal" id="cal"></div>
+        <div id="day-detail" style="margin-top:18px"></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Service Area · Purfect Pet · Reston, Herndon, Sterling, Ashburn, Aldie</title>
+  <meta name="description" content="Dog walks within 6 miles of Reston, VA. Overnight pet sitting across Fairfax County and eastern Loudoun: Sterling, Ashburn, South Riding, Brambleton and Aldie.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script type="module" src="/js/site.js"></script>
+  <script type="module" src="/js/map.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+  <main>
+    <section>
+      <div class="container">
+        <h1 class="center">Where I roam 🗺️</h1>
+        <p class="center muted">Home base: Reston, VA</p>
+
+        <div class="card" style="margin:24px 0">
+          <form class="row" id="zip-form" style="align-items:end">
+            <div><label for="zip">Check your ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" placeholder="e.g. 20147" autocomplete="postal-code"></div>
+            <div><button class="btn teal" type="submit">Sniff it out 🐽</button></div>
+          </form>
+          <div id="zip-result" aria-live="polite" style="margin-top:12px;font-weight:700"></div>
+        </div>
+
+        <div class="legend">
+          <span><i style="background:#2ec4b6"></i>Walks &amp; drop-ins (~6 mi from Reston)</span>
+          <span><i style="background:#ffd166"></i>Overnights &amp; house sitting</span>
+          <span>🐾 Towns I visit</span>
+          <span>🏛️ DC: overnights only (+50%)</span>
+        </div>
+        <div id="map" role="region" aria-label="Service area map"></div>
+        <p class="muted" style="font-size:.9rem">Boundaries are approximate. Just outside the lines? <a href="sms:+15418011068">Text me</a>. I may still be able to help!</p>
+
+        <div class="grid cols-2" style="margin-top:28px">
+          <div class="card teal">
+            <h3>🦮 Walks &amp; drop-in visits</h3>
+            <p>Within about <strong>6 miles of Reston</strong>: Reston, Herndon, Oak Hill, Great Falls, parts of Sterling, Vienna &amp; Oakton.</p>
+          </div>
+          <div class="card sun">
+            <h3>🌙 Overnights</h3>
+            <p>All around <strong>Fairfax County</strong>, plus eastern <strong>Loudoun</strong>: Sterling, Dulles, Ashburn, Brambleton, South Riding, and out to <strong>Aldie</strong>. Washington, DC overnights are +50%.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="site-footer"></footer>
+</body>
+</html>

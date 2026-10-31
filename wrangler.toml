@@ -1,0 +1,16 @@
+# Cloudflare Pages config for purfect-pet.com
+name = "purfect-pet"
+pages_build_output_dir = "public"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "purfect-pet"
+# Paste the id printed by:  npx wrangler d1 create purfect-pet
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+[vars]
+# Cloudflare Access (protects /admin). See README step 5.
+ACCESS_TEAM_DOMAIN = ""   # e.g. "purfectpet.cloudflareaccess.com"
+ACCESS_AUD = ""           # Application Audience (AUD) tag
+ADMIN_EMAILS = ""         # Anissa's email (comma separate to add more)

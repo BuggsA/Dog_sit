@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book a Visit · Purfect Pet</title>
+  <meta name="description" content="Request dog walks, drop-in visits, or overnight pet sitting with Anissa.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/site.js"></script>
+  <script type="module" src="/js/book.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+  <main>
+    <section>
+      <div class="container" style="max-width:860px">
+        <h1 class="center">Request a visit 📅</h1>
+        <p class="center muted">Send a request and Anissa gets a text right away. She'll confirm (or suggest other dates) as soon as she can.</p>
+
+        <div class="note" id="blocked-note" hidden></div>
+
+        <form class="card" id="book-form" style="margin-top:20px" novalidate>
+          <h3>About you</h3>
+          <div class="row">
+            <div class="field"><label for="name">Your name *</label><input id="name" name="name" required autocomplete="name"></div>
+            <div class="field"><label for="phone">Mobile phone *</label><input id="phone" name="phone" type="tel" required autocomplete="tel" placeholder="703-555-0123"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+            <div class="field"><label for="zip">ZIP code *</label><input id="zip" name="zip" inputmode="numeric" maxlength="5" required autocomplete="postal-code"></div>
+          </div>
+          <div class="field muted" id="zip-info"></div>
+
+          <h3 style="margin-top:10px">Your pets</h3>
+          <div class="field">
+            <label>Who am I caring for? *</label>
+            <div class="choice-group" id="pet-types"></div>
+          </div>
+          <div class="field"><label for="pets">Names, breeds &amp; ages</label><input id="pets" name="pets" placeholder="Biscuit, 5yo golden retriever · Mochi, 3yo tabby"></div>
+          <label class="check"><input type="checkbox" name="ageFlag" id="ageFlag"> A dog is under 1 year or over 14 years old (custom pricing)</label>
+
+          <h3 style="margin-top:20px">What you need</h3>
+          <div class="field">
+            <div class="choice-group">
+              <input type="radio" name="service" id="svc-visit" value="visit" checked><label for="svc-visit">🦮 Drop-in visits / walks</label>
+              <input type="radio" name="service" id="svc-overnight" value="overnight"><label for="svc-overnight">🌙 Overnights</label>
+              <input type="radio" name="service" id="svc-meet" value="meet"><label for="svc-meet">🤝 Just a meet &amp; greet</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="start">Start date *</label><input id="start" name="start" type="date" required></div>
+            <div class="field"><label for="end">End date</label><input id="end" name="end" type="date"></div>
+          </div>
+          <div class="row" id="visit-opts">
+            <div class="field"><label for="minutes">Visit length</label>
+              <select id="minutes" name="minutes"><option value="15">15 min</option><option value="30" selected>30 min</option><option value="60">1 hour</option></select></div>
+            <div class="field"><label for="perDay">Visits per day</label><input id="perDay" name="perDay" type="number" min="1" max="6" value="2"></div>
+          </div>
+          <div class="row" id="overnight-opts" hidden>
+            <div class="field"><label for="hours">Hours with your pet each night</label>
+              <select id="hours" name="hours"><option value="10">10 hrs</option><option value="12" selected>12 hrs</option><option value="20">20 hrs</option><option value="24">24 hrs</option></select></div>
+          </div>
+          <div class="field"><label for="notes">Anything else? (routine, meds, quirks, holidays…)</label><textarea id="notes" name="notes" rows="4"></textarea></div>
+          <label class="check"><input type="checkbox" name="newClient" id="newClient" checked> I'm a new client (we'll schedule a meet &amp; greet first)</label>
+          <label class="check"><input type="checkbox" name="consent" id="consent" required> It's OK for Anissa to text or call me about this request *</label>
+
+          <!-- spam trap: real people never see or fill this -->
+          <div class="hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+
+          <p style="margin-top:20px"><button class="btn" type="submit"><span class="wag">🐾</span> Send request</button></p>
+          <div id="form-msg" aria-live="polite" style="font-weight:700"></div>
+        </form>
+
+        <div class="card teal center" id="thanks" hidden style="margin-top:20px">
+          <div class="icon" style="font-size:4rem">🎉🐶</div>
+          <h2>Request sent!</h2>
+          <p>Anissa just got a text about it. She'll reach out soon to confirm. Can't wait to meet your crew!</p>
+          <p>Need her sooner? <a href="sms:+15418011068">Text 541-801-1068</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="site-footer"></footer>
+</body>
+</html>
