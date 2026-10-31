@@ -96,7 +96,7 @@ section { padding: clamp(64px, 9vw, 112px) 0; }
 .nav-links a[aria-current="page"] { color: var(--forest); box-shadow: inset 0 -2px 0 var(--clay); border-radius: 0; }
 .nav-toggle { display: none; background: none; border: 0; color: var(--forest); cursor: pointer; padding: 6px; }
 .nav-toggle .i { width: 30px; height: 30px; }
-@media (max-width: 920px) {
+@media (max-width: 1120px) {
   .nav-toggle { display: block; }
   .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--cream); padding: 12px 5vw 20px; border-bottom: 1px solid var(--line); box-shadow: var(--shadow); }
   .nav-links.open { display: flex; }
@@ -366,3 +366,8 @@ legend { font-family: var(--serif); font-size: 1.3rem; color: var(--forest); mar
   .lucy[style] .lucy-portrait { margin: 0 auto; }
   .hero-card { position: relative; left: auto; bottom: auto; margin: -36px auto 0; }
 }
+
+.story p { font-size: 1.1rem; }
+.story h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); margin-top: 1.6em; }
+.story h2:first-of-type { margin-top: 0; }
+.nav-links a, .brand .word { white-space: nowrap; }

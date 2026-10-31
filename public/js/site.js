@@ -10,6 +10,7 @@ const links = [
   ["/pricing", "Pricing"],
   ["/area", "Service Area"],
   ["/about", "About"],
+  ["/lucy", "Lucy's Story"],
 ];
 
 const here = location.pathname.replace(/(index)?\.html$/, "").replace(/\/$/, "") || "/";
