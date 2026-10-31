@@ -1,16 +1,17 @@
 # Cloudflare Pages config for walksforlucy.com
 name = "walks-for-lucy"
 pages_build_output_dir = "public"
-compatibility_date = "2026-10-01"
+compatibility_date = "2025-09-01"
 
-[[d1_databases]]
-binding = "DB"
-database_name = "walks-for-lucy"
-# Paste the id printed by:  npx wrangler d1 create walks-for-lucy
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+# ── Database (needed for booking requests + admin) ─────────────────────
+# 1) Run:  npx wrangler d1 create walks-for-lucy
+# 2) Uncomment the 4 lines below and paste the database_id it prints.
+#    (Or skip this file and add a D1 binding named "DB" in the dashboard:
+#     Pages project → Settings → Bindings → Add → D1 database.)
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "walks-for-lucy"
+# database_id = "paste-id-here"
 
-[vars]
-# Cloudflare Access (protects /admin). See README step 5.
-ACCESS_TEAM_DOMAIN = ""   # e.g. "walksforlucy.cloudflareaccess.com"
-ACCESS_AUD = ""           # Application Audience (AUD) tag
-ADMIN_EMAILS = ""         # Anissa's email (comma separate to add more)
+# Admin login + notifications are set in the dashboard:
+# Pages project → Settings → Variables and secrets (see README).

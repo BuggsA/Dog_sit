@@ -34,20 +34,25 @@ npm run db:local
 npm run dev
 ```
 
-Then open http://localhost:8788 (admin: http://localhost:8788/admin/; `DEV_ADMIN_BYPASS=1` skips login locally).
+Local booking needs the D1 block in `wrangler.toml` uncommented (see step 2 below). Then open http://localhost:8788 (admin: http://localhost:8788/admin/; `DEV_ADMIN_BYPASS=1` skips login locally).
 
 Run the pricing tests with `npm test`.
 
 ## Put it live on Cloudflare (one-time setup)
 
-1. **Log in:** `npx wrangler login`
-2. **Create the database:** `npx wrangler d1 create walks-for-lucy`, then paste the printed `database_id` into `wrangler.toml`. Then run `npm run db:remote`.
-3. **Create the Pages project:** Cloudflare dashboard → Workers & Pages → Create → Pages → *Connect to Git* → pick this repo.
-   - Build command: *(leave empty)*
-   - Build output directory: `public`
-   - Production branch: `main`
+1. **Create a *Pages* project** (not a Worker): Cloudflare dashboard → Workers & Pages → Create → **Pages** tab → *Connect to Git* → pick this repo.
+   - Framework preset: **None**
+   - Build command: **leave empty** (or `exit 0`)
+   - Build output directory: **`public`**
+   - Production branch: the branch with the site (currently `claude/sharp-mendel-qu61vq`, or `main` once it's merged)
 
-   Every push to GitHub then deploys automatically, and every branch gets its own preview URL.
+   Every push then deploys automatically. The site works right away. Booking requests show a "text Anissa" message until step 2 is done.
+2. **Database for booking requests:**
+   - Run `npx wrangler login`, then `npx wrangler d1 create walks-for-lucy`.
+   - Run `npx wrangler d1 execute walks-for-lucy --remote --file=schema.sql` to create the tables.
+   - Pages project → Settings → **Bindings** → Add → D1 database → variable name **`DB`** → pick `walks-for-lucy`. Then redeploy.
+   - For local development, also uncomment the D1 block in `wrangler.toml` and paste the database id.
+
 4. **Custom domain:** Pages project → Custom domains → add `walksforlucy.com` and `www.walksforlucy.com`. This is easiest if the domain's DNS is on Cloudflare. To keep the old `purfect-pet.com` working, add a Cloudflare *Redirect Rule* on that zone that sends everything to `https://walksforlucy.com`.
 5. **Lock the admin page (Cloudflare Access, free):**
    - Zero Trust dashboard → Access → Applications → Add → *Self-hosted*.

@@ -24,7 +24,7 @@ map.setZoom(map.getZoom() + 0.25);
 const pin = (id, cls = "") =>
   L.divIcon({ className: `map-pin ${cls}`, html: `<svg><use href="/img/icons.svg#${id}"/></svg>`, iconSize: [30, 30], iconAnchor: [15, 15] });
 
-L.marker([HOME.lat, HOME.lng], { icon: pin("logo", "home"), zIndexOffset: 1000 })
+L.marker([HOME.lat, HOME.lng], { icon: pin("logo-bold", "home"), zIndexOffset: 1000 })
   .addTo(map)
   .bindTooltip("Reston (home base)", { permanent: true, direction: "bottom", offset: [0, 18], className: "town-label" });
 
