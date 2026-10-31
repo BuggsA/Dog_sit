@@ -2,7 +2,7 @@
 
 Anissa's dog walking & pet sitting site for Reston, Fairfax & Loudoun County, named in memory of Lucy.
 
-**Stack:** Cloudflare Pages (website) + Pages Functions (API) + D1 (database) + Cloudflare Access (admin login).
+**Stack:** a Cloudflare Worker with static assets (website + API) + D1 (database) + Cloudflare Access (admin login).
 Plain HTML/CSS/JS with no build step, so you can edit any page directly.
 
 ## What's where
@@ -22,7 +22,9 @@ Plain HTML/CSS/JS with no build step, so you can edit any page directly.
 | `scripts/build-zones.mjs` | Rebuilds `zone-data.js` |
 | `public/img/icons.svg` | Custom icon set (one file, all icons) |
 | `public/img/` | Photos (location data removed) |
-| `functions/api/` | Server code: booking requests, availability, admin |
+| `src/worker.js` | Worker entry: routes `/api/*`, locks `/admin` |
+| `src/api/` | Server code: booking requests, availability, admin |
+| `wrangler.toml` | Cloudflare config (Worker name `dog-sit`) |
 | `schema.sql` | Database tables |
 
 ## Run it on your computer
@@ -34,35 +36,32 @@ npm run db:local
 npm run dev
 ```
 
-Local booking needs the D1 block in `wrangler.toml` uncommented (see step 2 below). Then open http://localhost:8788 (admin: http://localhost:8788/admin/; `DEV_ADMIN_BYPASS=1` skips login locally).
+Local booking needs the D1 block in `wrangler.toml` uncommented (see step 2 below). Then open http://localhost:8787 (admin: http://localhost:8787/admin/; `DEV_ADMIN_BYPASS=1` skips login locally).
 
 Run the pricing tests with `npm test`.
 
 ## Put it live on Cloudflare (one-time setup)
 
-1. **Create a *Pages* project** (not a Worker): Cloudflare dashboard → Workers & Pages → Create → **Pages** tab → *Connect to Git* → pick this repo.
-   - Framework preset: **None**
-   - Build command: **leave empty** (or `exit 0`)
-   - Build output directory: **`public`**
-   - Production branch: the branch with the site (currently `claude/sharp-mendel-qu61vq`, or `main` once it's merged)
+1. **Worker project:** the `dog-sit` Worker is connected to this GitHub repo (Workers & Pages → `dog-sit` → Settings → Build).
+   - Deploy command: `npx wrangler deploy` (the default)
+   - Build command: leave empty
+   - Production branch: `main`
 
-   Every push then deploys automatically. The site works right away. Booking requests show a "text Anissa" message until step 2 is done.
+   Every push to `main` deploys automatically. The site works right away. Booking requests show a "text Anissa" message until step 2 is done.
 2. **Database for booking requests:**
-   - Run `npx wrangler login`, then `npx wrangler d1 create walks-for-lucy`.
-   - Run `npx wrangler d1 execute walks-for-lucy --remote --file=schema.sql` to create the tables.
-   - Pages project → Settings → **Bindings** → Add → D1 database → variable name **`DB`** → pick `walks-for-lucy`. Then redeploy.
-   - For local development, also uncomment the D1 block in `wrangler.toml` and paste the database id.
-
-4. **Custom domain:** Pages project → Custom domains → add `walksforlucy.com` and `www.walksforlucy.com`. This is easiest if the domain's DNS is on Cloudflare. To keep the old `purfect-pet.com` working, add a Cloudflare *Redirect Rule* on that zone that sends everything to `https://walksforlucy.com`.
-5. **Lock the admin page (Cloudflare Access, free):**
+   - Dashboard → Storage & databases → **D1** → Create → name it `walks-for-lucy`.
+   - Open it → **Console** → paste the contents of `schema.sql` → Execute.
+   - Copy its **Database ID**, then in `wrangler.toml` uncomment the `[[d1_databases]]` block and paste the ID. Push to `main` and it redeploys with booking switched on.
+3. **Custom domain:** `dog-sit` Worker → Settings → Domains & Routes → Add → Custom domain → `walksforlucy.com` (and `www.walksforlucy.com`). The domain's DNS needs to be on Cloudflare. To keep the old `purfect-pet.com` working, add a Cloudflare *Redirect Rule* on that zone that sends everything to `https://walksforlucy.com`.
+4. **Lock the admin page (Cloudflare Access, free):**
    - Zero Trust dashboard → Access → Applications → Add → *Self-hosted*.
    - Domain: `walksforlucy.com`, paths `admin/*` **and** `api/admin/*`.
    - Policy: *Allow* → Emails → Anissa's email (and yours). She logs in with a one-time code sent to her email.
-   - Copy the **Application Audience (AUD) tag**. Then in Pages → Settings → Variables, set:
+   - Copy the **Application Audience (AUD) tag**. Then in the `dog-sit` Worker → Settings → Variables and secrets, add:
      - `ACCESS_TEAM_DOMAIN` = `yourteam.cloudflareaccess.com`
      - `ACCESS_AUD` = the AUD tag
      - `ADMIN_EMAILS` = Anissa's email
-6. **Notifications to Anissa's phone.** Pages → Settings → Variables (mark tokens as *Secret*). Pick one:
+5. **Notifications to Anissa's phone.** `dog-sit` Worker → Settings → Variables and secrets (mark tokens as *Secret*). Pick one:
    - **Free and instant:** install the **ntfy** app on her phone, subscribe to a long random topic name, and set `NTFY_TOPIC` to that name.
    - **Real SMS:** with a Twilio account, set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` (your Twilio number) and `NOTIFY_TO=+15418011068`. US business texting needs A2P 10DLC registration in Twilio first (about 1–3 weeks).
 

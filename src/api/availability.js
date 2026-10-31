@@ -1,5 +1,5 @@
 // GET /api/availability: public list of unavailable dates (no private details).
-import { json } from "../_lib/util.js";
+import { json } from "../util.js";
 
 export async function onRequestGet({ env }) {
   const today = new Date().toISOString().slice(0, 10);

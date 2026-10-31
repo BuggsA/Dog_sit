@@ -1,5 +1,5 @@
 // POST /api/requests: a client submits a booking request.
-import { json, notify, clean, isDate } from "../_lib/util.js";
+import { json, notify, clean, isDate } from "../util.js";
 import { estimate, PETS } from "../../public/js/pricing.js";
 import { classifyZip } from "../../public/js/zones.js";
 

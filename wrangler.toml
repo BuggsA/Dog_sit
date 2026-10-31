@@ -1,17 +1,23 @@
-# Cloudflare Pages config for walksforlucy.com
+# Walks for Lucy (walksforlucy.com): Cloudflare Worker + static assets
 name = "dog-sit"
-pages_build_output_dir = "public"
+main = "src/worker.js"
 compatibility_date = "2025-09-01"
 
+# Keep variables you set in the Cloudflare dashboard when deploying
+keep_vars = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "404-page"
+# Run the Worker code first for these paths (API + Anissa's admin page)
+run_worker_first = ["/api/*", "/admin", "/admin/*"]
+
 # ── Database (needed for booking requests + admin) ─────────────────────
-# 1) Run:  npx wrangler d1 create walks-for-lucy
-# 2) Uncomment the 4 lines below and paste the database_id it prints.
-#    (Or skip this file and add a D1 binding named "DB" in the dashboard:
-#     Pages project → Settings → Bindings → Add → D1 database.)
+# 1) Create it: Cloudflare dashboard → Storage & databases → D1 → Create,
+#    name it "walks-for-lucy" (or run: npx wrangler d1 create walks-for-lucy)
+# 2) Uncomment the 4 lines below and paste its Database ID.
 # [[d1_databases]]
 # binding = "DB"
 # database_name = "walks-for-lucy"
 # database_id = "paste-id-here"
-
-# Admin login + notifications are set in the dashboard:
-# Pages project → Settings → Variables and secrets (see README).

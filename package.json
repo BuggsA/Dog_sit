@@ -3,10 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler pages dev",
+    "dev": "wrangler dev",
     "db:local": "wrangler d1 execute walks-for-lucy --local --file=schema.sql",
     "db:remote": "wrangler d1 execute walks-for-lucy --remote --file=schema.sql",
-    "deploy": "wrangler pages deploy --project-name dog-sit",
+    "deploy": "wrangler deploy",
     "test": "node --test tests/*.test.js"
   },
   "devDependencies": {
