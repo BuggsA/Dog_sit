@@ -375,3 +375,15 @@ legend { font-family: var(--serif); font-size: 1.3rem; color: var(--forest); mar
 .brand .mark { width: 50px; height: 50px; margin: -2px 0; }
 .hero-card .icon-badge .i { width: 36px; height: 36px; }
 .hero-card .icon-badge { width: 52px; height: 52px; }
+
+/* FAQ */
+.faq-group { font-size: clamp(1.5rem, 2.6vw, 1.9rem); margin: 48px 0 16px; }
+.faq-group:first-child { margin-top: 0; }
+.faq-list { display: grid; gap: 12px; }
+.faq-item { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+.faq-item summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 24px; font-weight: 600; color: var(--forest); }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: "+"; flex: none; font-size: 1.5rem; line-height: 1; color: var(--clay); transition: transform 0.2s; }
+.faq-item[open] summary::after { transform: rotate(45deg); }
+.faq-item summary:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; border-radius: var(--radius); }
+.faq-item p { margin: 0; padding: 0 24px 22px; color: var(--muted); }
