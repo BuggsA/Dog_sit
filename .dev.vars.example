@@ -2,7 +2,7 @@
 DEV_ADMIN_BYPASS=1
 
 # Option A: free push notifications via the ntfy app (pick a long random topic name)
-# NTFY_TOPIC=purfect-pet-anissa-8f3k2q9z
+# NTFY_TOPIC=walks-for-lucy-anissa-8f3k2q9z
 
 # Option B: real SMS via Twilio
 # TWILIO_ACCOUNT_SID=ACxxxxxxxx

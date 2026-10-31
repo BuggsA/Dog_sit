@@ -12,7 +12,7 @@ export const json = (data, status = 200) =>
  *  - Twilio SMS:  TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM, NOTIFY_TO
  *  - ntfy push:   NTFY_TOPIC  (free app, https://ntfy.sh)
  */
-export async function notify(env, text, title = "Purfect Pet") {
+export async function notify(env, text, title = "Walks for Lucy") {
   const jobs = [];
   if (env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN && env.TWILIO_FROM && env.NOTIFY_TO) {
     const body = new URLSearchParams({ To: env.NOTIFY_TO, From: env.TWILIO_FROM, Body: text.slice(0, 1500) });
@@ -31,7 +31,7 @@ export async function notify(env, text, title = "Purfect Pet") {
     jobs.push(
       fetch(`https://ntfy.sh/${encodeURIComponent(env.NTFY_TOPIC)}`, {
         method: "POST",
-        headers: { Title: title, Tags: "dog", Click: "https://purfect-pet.com/admin/" },
+        headers: { Title: title, Tags: "dog", Click: "https://walksforlucy.com/admin/" },
         body: text,
       })
     );
@@ -48,7 +48,7 @@ export async function notify(env, text, title = "Purfect Pet") {
 // JWT header. We verify the signature here too, so the data stays safe even if
 // the Access rule is ever misconfigured.
 //
-// Env vars: ACCESS_TEAM_DOMAIN (e.g. "purfectpet.cloudflareaccess.com"),
+// Env vars: ACCESS_TEAM_DOMAIN (e.g. "walksforlucy.cloudflareaccess.com"),
 //           ACCESS_AUD (Application Audience tag), ADMIN_EMAILS (comma separated)
 // Local dev only: DEV_ADMIN_BYPASS="1"
 

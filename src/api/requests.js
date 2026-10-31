@@ -1,5 +1,5 @@
 // POST /api/requests: a client submits a booking request.
-import { json, notify, clean, isDate } from "../_lib/util.js";
+import { json, notify, clean, isDate } from "../util.js";
 import { estimate, PETS } from "../../public/js/pricing.js";
 import { classifyZip } from "../../public/js/zones.js";
 
@@ -62,13 +62,13 @@ export async function onRequestPost({ request, env, waitUntil }) {
 
   const what =
     service === "overnight" ? `Overnight ${hours}h` : service === "visit" ? `${perDay}x ${minutes}min visits/day` : "Meet & greet";
-  const emoji = petTypes.map((p) => PETS[p].emoji).join("");
+  const petNames = petTypes.map((p) => PETS[p].label).join(" + ");
   const text =
-    `🐾 New request #${row.id}\n${name} ${phone}\n${emoji} ${what}\n${start}${end !== start ? ` → ${end}` : ""}\n` +
+    `New request #${row.id}\n${name} ${phone}\n${petNames}: ${what}\n${start}${end !== start ? ` → ${end}` : ""}\n` +
     `${zone?.town || zip}${zone?.area === "dc" ? " (DC)" : ""}${d.newClient ? " · NEW client" : ""}` +
-    `${ageFlag ? " · puppy/senior" : ""}${est != null ? ` · est $${est}` : ""}\npurfect-pet.com/admin`;
+    `${ageFlag ? " · puppy/senior" : ""}${est != null ? ` · est $${est}` : ""}\nwalksforlucy.com/admin`;
 
-  waitUntil(notify(env, text, "New booking request 🐶"));
+  waitUntil(notify(env, text, "New booking request"));
 
   return json({ ok: true, id: row.id });
 }

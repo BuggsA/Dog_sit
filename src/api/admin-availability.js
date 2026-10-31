@@ -1,6 +1,6 @@
 // GET  /api/admin/availability?month=2026-11 → blocked days + booked days for a month
 // POST /api/admin/availability {date, blocked, note?} → block / unblock a day
-import { json, clean, isDate } from "../../_lib/util.js";
+import { json, clean, isDate } from "../util.js";
 
 export async function onRequestGet({ request, env }) {
   const month = new URL(request.url).searchParams.get("month") || new Date().toISOString().slice(0, 7);

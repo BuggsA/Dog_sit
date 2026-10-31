@@ -1,5 +1,5 @@
--- Purfect Pet database (Cloudflare D1 / SQLite)
--- Apply with:  npx wrangler d1 execute purfect-pet --remote --file=schema.sql
+-- Walks for Lucy database (Cloudflare D1 / SQLite)
+-- Apply with:  npx wrangler d1 execute walks-for-lucy --remote --file=schema.sql
 
 CREATE TABLE IF NOT EXISTS requests (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -1,15 +1,16 @@
 {
-  "name": "purfect-pet",
+  "name": "walks-for-lucy",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler pages dev",
-    "db:local": "wrangler d1 execute purfect-pet --local --file=schema.sql",
-    "db:remote": "wrangler d1 execute purfect-pet --remote --file=schema.sql",
-    "deploy": "wrangler pages deploy",
+    "dev": "wrangler dev",
+    "db:local": "wrangler d1 execute walks-for-lucy --local --file=schema.sql",
+    "db:remote": "wrangler d1 execute walks-for-lucy --remote --file=schema.sql",
+    "deploy": "wrangler deploy",
     "test": "node --test tests/*.test.js"
   },
   "devDependencies": {
+    "@turf/turf": "^7.4.0",
     "wrangler": "^4.0.0"
   }
 }

@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Book a Visit · Purfect Pet</title>
-  <meta name="description" content="Request dog walks, drop-in visits, or overnight pet sitting with Anissa.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <title>Request a Visit · Walks for Lucy</title>
+  <meta name="description" content="Request dog walks, drop-in visits or overnight pet sitting with Anissa of Walks for Lucy.">
+  <meta name="theme-color" content="#2f4a3f">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..600,0..100,0..1;1,9..144,400..600,0..100,0..1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <script type="module" src="/js/site.js"></script>
   <script type="module" src="/js/book.js"></script>
@@ -17,73 +18,86 @@
   <header id="site-header"></header>
   <main>
     <section>
-      <div class="container" style="max-width:860px">
-        <h1 class="center">Request a visit 📅</h1>
-        <p class="center muted">Send a request and Anissa gets a text right away. She'll confirm (or suggest other dates) as soon as she can.</p>
+      <div class="container" style="display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:40px;align-items:start" id="book-layout">
+        <div>
+          <span class="eyebrow">Book</span>
+          <h1>Request a visit</h1>
+          <p class="lead" style="margin-bottom:28px">Tell me about your pets and your dates. I'll get a text right away and confirm with you as soon as I can.</p>
 
-        <div class="note" id="blocked-note" hidden></div>
+          <div class="alert" id="blocked-note" hidden style="margin-bottom:20px"></div>
 
-        <form class="card" id="book-form" style="margin-top:20px" novalidate>
-          <h3>About you</h3>
-          <div class="row">
-            <div class="field"><label for="name">Your name *</label><input id="name" name="name" required autocomplete="name"></div>
-            <div class="field"><label for="phone">Mobile phone *</label><input id="phone" name="phone" type="tel" required autocomplete="tel" placeholder="703-555-0123"></div>
-          </div>
-          <div class="row">
-            <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" required autocomplete="email"></div>
-            <div class="field"><label for="zip">ZIP code *</label><input id="zip" name="zip" inputmode="numeric" maxlength="5" required autocomplete="postal-code"></div>
-          </div>
-          <div class="field muted" id="zip-info"></div>
+          <form class="card" id="book-form" novalidate>
+            <fieldset class="form-section">
+              <legend>About you</legend>
+              <div class="row">
+                <div class="field"><label for="name">Your name</label><input id="name" required autocomplete="name"></div>
+                <div class="field"><label for="phone">Mobile phone</label><input id="phone" type="tel" required autocomplete="tel" placeholder="703-555-0123"></div>
+              </div>
+              <div class="row">
+                <div class="field"><label for="email">Email</label><input id="email" type="email" required autocomplete="email"></div>
+                <div class="field"><label for="zip">ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" required autocomplete="postal-code"></div>
+              </div>
+              <div class="muted small" id="zip-info" style="margin-top:-6px;margin-bottom:12px"></div>
+            </fieldset>
 
-          <h3 style="margin-top:10px">Your pets</h3>
-          <div class="field">
-            <label>Who am I caring for? *</label>
-            <div class="choice-group" id="pet-types"></div>
-          </div>
-          <div class="field"><label for="pets">Names, breeds &amp; ages</label><input id="pets" name="pets" placeholder="Biscuit, 5yo golden retriever · Mochi, 3yo tabby"></div>
-          <label class="check"><input type="checkbox" name="ageFlag" id="ageFlag"> A dog is under 1 year or over 14 years old (custom pricing)</label>
+            <fieldset class="form-section">
+              <legend>Your pets</legend>
+              <div class="field"><span class="label">Who will I be caring for?</span><div class="choices" id="pet-types"></div></div>
+              <div class="field"><label for="pets">Names, breeds &amp; ages</label><input id="pets" placeholder="e.g. Biscuit, 5-year-old golden retriever; Mochi, 3-year-old tabby"></div>
+              <label class="check"><input type="checkbox" id="ageFlag"> A dog is under 1 year or over 14 years old (custom pricing)</label>
+            </fieldset>
 
-          <h3 style="margin-top:20px">What you need</h3>
-          <div class="field">
-            <div class="choice-group">
-              <input type="radio" name="service" id="svc-visit" value="visit" checked><label for="svc-visit">🦮 Drop-in visits / walks</label>
-              <input type="radio" name="service" id="svc-overnight" value="overnight"><label for="svc-overnight">🌙 Overnights</label>
-              <input type="radio" name="service" id="svc-meet" value="meet"><label for="svc-meet">🤝 Just a meet &amp; greet</label>
+            <fieldset class="form-section">
+              <legend>What you need</legend>
+              <div class="field"><div class="choices" id="svc"></div></div>
+              <div class="row">
+                <div class="field"><label for="start">Start date</label><input id="start" type="date" required></div>
+                <div class="field"><label for="end">End date</label><input id="end" type="date"></div>
+              </div>
+              <div class="row" id="visit-opts">
+                <div class="field"><label for="minutes">Visit length</label>
+                  <select id="minutes"><option value="15">15 minutes</option><option value="30" selected>30 minutes</option><option value="60">1 hour</option></select></div>
+                <div class="field"><label for="perDay">Visits per day</label><input id="perDay" type="number" min="1" max="6" value="2"></div>
+              </div>
+              <div class="row" id="overnight-opts" hidden>
+                <div class="field"><label for="hours">Hours with your pet each day</label>
+                  <select id="hours"><option value="10">10 hours</option><option value="12" selected>12 hours</option><option value="20">20 hours</option><option value="24">24 hours</option></select></div>
+              </div>
+              <div class="field"><label for="notes">Anything else I should know?</label><textarea id="notes" rows="4" placeholder="Routines, medications, quirks, holiday dates…"></textarea></div>
+              <label class="check" style="margin-bottom:10px"><input type="checkbox" id="newClient" checked> I'm a new client (we'll schedule a meet &amp; greet first)</label>
+              <label class="check"><input type="checkbox" id="consent" required> It's OK for Anissa to text or call me about this request</label>
+            </fieldset>
+
+            <div class="hp" aria-hidden="true"><label for="website">Website</label><input id="website" tabindex="-1" autocomplete="off"></div>
+
+            <div style="margin-top:24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+              <button class="btn" type="submit">Send request <svg class="i i-arrow"><use href="/img/icons.svg#arrow"/></svg></button>
+              <span id="form-msg" aria-live="polite" class="muted"></span>
             </div>
-          </div>
-          <div class="row">
-            <div class="field"><label for="start">Start date *</label><input id="start" name="start" type="date" required></div>
-            <div class="field"><label for="end">End date</label><input id="end" name="end" type="date"></div>
-          </div>
-          <div class="row" id="visit-opts">
-            <div class="field"><label for="minutes">Visit length</label>
-              <select id="minutes" name="minutes"><option value="15">15 min</option><option value="30" selected>30 min</option><option value="60">1 hour</option></select></div>
-            <div class="field"><label for="perDay">Visits per day</label><input id="perDay" name="perDay" type="number" min="1" max="6" value="2"></div>
-          </div>
-          <div class="row" id="overnight-opts" hidden>
-            <div class="field"><label for="hours">Hours with your pet each night</label>
-              <select id="hours" name="hours"><option value="10">10 hrs</option><option value="12" selected>12 hrs</option><option value="20">20 hrs</option><option value="24">24 hrs</option></select></div>
-          </div>
-          <div class="field"><label for="notes">Anything else? (routine, meds, quirks, holidays…)</label><textarea id="notes" name="notes" rows="4"></textarea></div>
-          <label class="check"><input type="checkbox" name="newClient" id="newClient" checked> I'm a new client (we'll schedule a meet &amp; greet first)</label>
-          <label class="check"><input type="checkbox" name="consent" id="consent" required> It's OK for Anissa to text or call me about this request *</label>
+          </form>
 
-          <!-- spam trap: real people never see or fill this -->
-          <div class="hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
-
-          <p style="margin-top:20px"><button class="btn" type="submit"><span class="wag">🐾</span> Send request</button></p>
-          <div id="form-msg" aria-live="polite" style="font-weight:700"></div>
-        </form>
-
-        <div class="card teal center" id="thanks" hidden style="margin-top:20px">
-          <div class="icon" style="font-size:4rem">🎉🐶</div>
-          <h2>Request sent!</h2>
-          <p>Anissa just got a text about it. She'll reach out soon to confirm. Can't wait to meet your crew!</p>
-          <p>Need her sooner? <a href="sms:+15418011068">Text 541-801-1068</a></p>
+          <div class="card center" id="thanks" hidden>
+            <div class="icon-badge" style="margin:0 auto 18px;width:72px;height:72px"><svg class="i" style="width:40px;height:40px"><use href="/img/icons.svg#check"/></svg></div>
+            <h2>Request sent, thank you!</h2>
+            <p class="lead" style="margin:0 auto 18px">Anissa has been notified and will reach out soon to confirm. She can't wait to meet your pets.</p>
+            <p>Need her sooner? <a href="sms:+15418011068">Text (541) 801-1068</a></p>
+          </div>
         </div>
+
+        <aside class="card" style="position:sticky;top:110px">
+          <h3>What happens next</h3>
+          <ul class="list" style="margin-top:16px">
+            <li><svg class="i"><use href="/img/icons.svg#message"/></svg><span>Anissa gets your request by text and replies to confirm.</span></li>
+            <li><svg class="i"><use href="/img/icons.svg#key"/></svg><span>New clients start with a meet &amp; greet: <strong>free</strong> in Fairfax County, $10 in Loudoun.</span></li>
+            <li><svg class="i"><use href="/img/icons.svg#camera"/></svg><span>During visits you'll get photo updates every time.</span></li>
+          </ul>
+          <hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
+          <p class="muted small" style="margin:0">Prefer to talk? <a href="sms:+15418011068">Text</a> or <a href="tel:+15418011068">call</a> (541) 801-1068.</p>
+        </aside>
       </div>
     </section>
   </main>
   <footer id="site-footer"></footer>
+  <style>@media (max-width: 900px) { #book-layout { grid-template-columns: 1fr !important; } #book-layout aside { position: static !important; } }</style>
 </body>
 </html>

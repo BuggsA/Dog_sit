@@ -1,6 +1,6 @@
 // GET   /api/admin/requests?status=pending   → list requests
 // PATCH /api/admin/requests  {id, status?, admin_notes?} → update one
-import { json, clean } from "../../_lib/util.js";
+import { json, clean } from "../util.js";
 
 const STATUSES = ["pending", "approved", "declined", "done"];
 
