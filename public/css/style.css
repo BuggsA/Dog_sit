@@ -371,3 +371,6 @@ legend { font-family: var(--serif); font-size: 1.3rem; color: var(--forest); mar
 .story h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); margin-top: 1.6em; }
 .story h2:first-of-type { margin-top: 0; }
 .nav-links a, .brand .word { white-space: nowrap; }
+.brand .mark { width: 56px; height: 56px; margin: -4px 0; }
+.hero-card .icon-badge .i { width: 36px; height: 36px; }
+.hero-card .icon-badge { width: 52px; height: 52px; }
