@@ -15,6 +15,7 @@ Plain HTML/CSS/JS with no build step, so you can edit any page directly.
 | `public/area.html` | Drive-time service-area map + ZIP checker |
 | `public/about.html` | About Anissa + Lucy's story |
 | `public/book.html` | Booking request form |
+| `public/faq.html` | Frequently asked questions |
 | `public/admin/` | Anissa's dashboard: requests, approve/decline, calendar |
 | `public/js/pricing.js` | **All prices & rules. Edit prices here only.** |
 | `public/js/zones.js` | Service-area logic + map town labels |
@@ -74,7 +75,7 @@ Run the pricing tests with `npm test`.
 - **Lucy's photo:** save it as `public/img/lucy.jpg` and follow the note in `about.html`. Lucy's story there is a short draft for Anissa to personalize.
 - **Icons:** all icons are original line drawings in `public/img/icons.svg`. Use one with `<svg class="i"><use href="/img/icons.svg#paw"/></svg>`.
 
-- **New page / SEO:** copy the `<head>` of an existing page and change the title, description, canonical URL and `og:` tags. Add the page to `public/sitemap.xml`. Business details for Google (prices, towns served) are in the JSON-LD block in `index.html`. Update it if prices in `pricing.js` change.
+- **New page / SEO:** copy the `<head>` of an existing page and change the title, description, canonical URL and `og:` tags. Add the page to `public/sitemap.xml`. Business details for Google (prices, towns served) are in the JSON-LD block in `index.html`. Update it if prices in `pricing.js` change. The FAQ page (`faq.html`) also mentions prices and rules in plain text, both in the visible answers and in the JSON-LD block at the top, so update both there too.
 
 ## Photo credits
 
