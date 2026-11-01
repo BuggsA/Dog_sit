@@ -98,3 +98,43 @@ const io = "IntersectionObserver" in window
   ? new IntersectionObserver((entries) => entries.forEach((e) => e.isIntersecting && (e.target.classList.add("in"), io.unobserve(e.target))), { rootMargin: "0px 0px -8% 0px" })
   : null;
 document.querySelectorAll(".reveal").forEach((el) => (io ? io.observe(el) : el.classList.add("in")));
+
+// − / + buttons on number boxes (easier than typing, especially on phones)
+document.querySelectorAll('main input[type="number"]').forEach((input) => {
+  const min = Number(input.min || 1);
+  const max = Number(input.max || 99);
+  const wrap = document.createElement("div");
+  wrap.className = "stepper";
+  input.before(wrap);
+  const btn = (dir, label) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.innerHTML = icon(dir > 0 ? "plus" : "minus");
+    b.setAttribute("aria-label", label);
+    b.addEventListener("click", () => set((Number(input.value) || min) + dir));
+    return b;
+  };
+  const name = document.querySelector(`label[for="${input.id}"]`)?.textContent.trim().toLowerCase().replace(/^number of /, "") || "value";
+  const down = btn(-1, `Fewer ${name}`);
+  const up = btn(1, `More ${name}`);
+  wrap.append(down, input, up);
+  input.inputMode = "numeric";
+  function refresh() {
+    const v = Number(input.value);
+    down.disabled = v <= min;
+    up.disabled = v >= max;
+  }
+  function set(v) {
+    input.value = Math.min(max, Math.max(min, Math.round(v) || min));
+    refresh();
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+  input.addEventListener("input", refresh);
+  // Typed values get tidied up when the box loses focus (e.g. 9 → 6, blank → 1)
+  input.addEventListener("change", (e) => {
+    const v = Number(input.value);
+    if (e.isTrusted && !(Number.isInteger(v) && v >= min && v <= max && input.value !== "")) set(v);
+  });
+  refresh();
+});

@@ -33,7 +33,13 @@ function update() {
   $("#overnight-fields").hidden = service !== "overnight";
   $("#age-wrap").hidden = pet !== "dog";
 
-  const min = Math.max(PETS[pet].minVisit, $("#feeding").checked ? 30 : 0);
+  const feeding = $("#feeding").checked;
+  const min = Math.max(PETS[pet].minVisit, feeding ? 30 : 0);
+  const note = $("#min-note");
+  note.hidden = min <= 15;
+  note.textContent =
+    PETS[pet].minVisit > 15 ? `${PETS[pet].label} visits are at least 30 minutes.`
+    : "Visits with feeding are at least 30 minutes. Untick feeding for a quick 15-minute walk.";
   document.querySelectorAll('input[name="minutes"]').forEach((i) => {
     i.disabled = Number(i.value) < min;
     if (i.disabled && i.checked) document.getElementById("minutes-30").checked = true;

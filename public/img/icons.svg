@@ -195,6 +195,9 @@
 <symbol id="plus" viewBox="0 0 48 48">
   <path class="s" d="M24 12v24M12 24h24"/>
 </symbol>
+<symbol id="minus" viewBox="0 0 48 48">
+  <path class="s" d="M12 24h24"/>
+</symbol>
 <symbol id="close" viewBox="0 0 48 48">
   <path class="s" d="M12 12l24 24M36 12L12 36"/>
 </symbol>
