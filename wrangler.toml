@@ -10,8 +10,8 @@ keep_vars = true
 directory = "./public"
 binding = "ASSETS"
 not_found_handling = "404-page"
-# Run the Worker code first for these paths (API + Anissa's admin page)
-run_worker_first = ["/api/*", "/admin", "/admin/*"]
+# Run the Worker code first for these paths (API, Anissa's admin page, clients' account page)
+run_worker_first = ["/api/*", "/admin", "/admin/*", "/account", "/account/*"]
 
 # ── Database (needed for booking requests + admin) ─────────────────────
 # 1) Create it: Cloudflare dashboard → Storage & databases → D1 → Create,

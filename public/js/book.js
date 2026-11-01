@@ -94,6 +94,36 @@ petList.addEventListener("change", refreshPets);
 const pre = (id) => { const el = document.getElementById(id); if (el) el.checked = true; };
 const prefill = params.getAll("pet").filter((p) => PETS[p]).slice(0, MAX_PETS);
 (prefill.length ? prefill : [""]).forEach((p) => addPet(p));
+
+// Signed in to "My account"? Fill in their details and saved pets.
+fetch("/api/account", { redirect: "manual" })
+  .then((r) => (r.ok ? r.json() : null))
+  .then((acct) => {
+    if (!acct?.client) return;
+    const c = acct.client;
+    const fill = (id, v) => { const el = $(id); if (v && !el.value) el.value = v; };
+    fill("#name", c.name);
+    fill("#phone", c.phone);
+    fill("#email", acct.email);
+    fill("#zip", c.zip);
+    // Swap the blank pet card for their saved pets (unless they came from the estimator with pets picked)
+    if (acct.pets.length && !prefill.length && cards().length === 1 && !kindOf(cards()[0])) {
+      cards()[0].remove();
+      acct.pets.slice(0, MAX_PETS).forEach((p) => {
+        addPet(p.type);
+        const card = cards().at(-1);
+        card.querySelector('[data-f="name"]').value = p.name;
+        card.querySelector('[data-f="details"]').value = [p.breed, p.age].filter(Boolean).join(", ");
+      });
+      refreshPets();
+    }
+    sync();
+    const note = $("#signed-in");
+    note.hidden = false;
+    note.innerHTML = `${icon("user")}<span>Signed in as <strong></strong>. We've filled in your details${acct.pets.length ? " and pets" : ""}. Remove any pets who don't need care this time.</span> <a href="/account/">My account</a>`;
+    note.querySelector("strong").textContent = acct.email;
+  })
+  .catch(() => {});
 if (params.get("service")) pre(`svc-${params.get("service")}`);
 if (params.get("zip")) $("#zip").value = params.get("zip");
 

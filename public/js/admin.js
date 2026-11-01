@@ -1,4 +1,4 @@
-import { money, petSummary } from "./pricing.js";
+import { PETS, money, petSummary } from "./pricing.js";
 const icon = (id) => `<svg class="i" aria-hidden="true"><use href="/img/icons.svg#${id}"/></svg>`;
 
 const $ = (s) => document.querySelector(s);
@@ -77,6 +77,7 @@ async function loadRequests(status) {
             ${r.status !== "approved" ? `<button class="btn sm" data-set="approved">Approve</button>` : `<button class="btn sm outline" data-set="done">Mark done</button>`}
             ${r.status !== "declined" ? `<button class="btn sm outline" data-set="declined">Decline</button>` : `<button class="btn sm outline" data-set="pending">Back to pending</button>`}
             <button class="btn sm outline" data-save>Save notes</button>
+            <button class="btn sm outline" data-client="${esc(r.email)}">${icon("user")}${r.client_id ? "Pets &amp; profile" : "Client history"}</button>
           </div>
         </article>`;
       })
@@ -89,6 +90,8 @@ async function loadRequests(status) {
 $("#req-list").addEventListener("click", async (e) => {
   const card = e.target.closest(".req");
   if (!card) return;
+  const clientBtn = e.target.closest("[data-client]");
+  if (clientBtn) return openClient(clientBtn.dataset.client, true);
   const id = Number(card.dataset.id);
   const notes = card.querySelector("[data-notes]").value;
   try {
@@ -157,16 +160,130 @@ $("#cal").addEventListener("click", async (e) => {
 $("#prev").onclick = () => { month.setMonth(month.getMonth() - 1); loadCalendar(); };
 $("#next").onclick = () => { month.setMonth(month.getMonth() + 1); loadCalendar(); };
 
+// ───────── Clients ─────────
+let clients = [];
+const STATUS_LABEL = { pending: "Waiting", approved: "Confirmed", declined: "Declined", done: "Done" };
+const petChips = (pets) =>
+  pets.map((p) => `<span class="pet-chip">${icon(PETS[p.type]?.icon || "paw")}${esc(p.name)}</span>`).join("");
+
+async function loadClients() {
+  const list = $("#clients-list");
+  list.innerHTML = `<p class="muted">Loading…</p>`;
+  try {
+    ({ clients } = await api("/api/admin/clients"));
+    renderClients();
+  } catch (e) {
+    list.innerHTML = `<div class="card">${esc(e.message)}</div>`;
+  }
+}
+function renderClients() {
+  const q = $("#client-search").value.trim().toLowerCase();
+  const shown = clients.filter((c) =>
+    !q || [c.name, c.email, c.phone, c.town, ...c.pets.map((p) => p.name)].some((v) => String(v || "").toLowerCase().includes(q))
+  );
+  $("#clients-list").innerHTML = shown.length
+    ? shown
+        .map(
+          (c) => `
+      <button class="card client-card" data-client="${esc(c.email)}">
+        <span class="admin-bar"><strong class="client-name">${esc(c.name || c.email)}</strong>
+          <span class="pill ${c.client_id ? "" : "grey"}">${c.client_id ? "Account" : "No account yet"}</span></span>
+        <span class="muted small">${esc([c.phone, c.town].filter(Boolean).join(" · "))}</span>
+        ${c.pets.length ? `<span class="pet-chips">${petChips(c.pets)}</span>` : ""}
+        <span class="muted small">${c.bookings} booking request${c.bookings === 1 ? "" : "s"}${c.pending ? ` · <strong style="color:var(--clay-dark)">${c.pending} waiting</strong>` : ""}</span>
+      </button>`
+        )
+        .join("")
+    : `<div class="card center"><p class="muted">${q ? "No clients match that." : "No clients yet. They'll appear here after their first booking request or login."}</p></div>`;
+}
+$("#client-search").addEventListener("input", renderClients);
+$("#clients-list").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-client]");
+  if (b) openClient(b.dataset.client);
+});
+
+const info = (label, value) => (value ? `<div class="info"><span>${label}</span><p>${esc(value)}</p></div>` : "");
+async function openClient(email, fromRequests = false) {
+  showTab("clients", false);
+  $("#clients-list-wrap").hidden = true;
+  const box = $("#client-detail");
+  box.hidden = false;
+  box.innerHTML = `<p class="muted">Loading…</p>`;
+  box.dataset.back = fromRequests ? current : "";
+  let d;
+  try {
+    d = await api(`/api/admin/clients?email=${encodeURIComponent(email)}`);
+  } catch (e) {
+    box.innerHTML = `<button class="btn sm outline" data-back>‹ Back</button><div class="card" style="margin-top:16px">${esc(e.message)}</div>`;
+    return;
+  }
+  const c = d.client || {};
+  const name = c.name || d.fromBookings?.name || d.email;
+  const phone = c.phone || d.fromBookings?.phone || "";
+  const digits = esc(String(phone).replace(/[^\d+]/g, ""));
+  box.innerHTML = `
+    <button class="btn sm outline" data-back>‹ ${fromRequests ? "Back to requests" : "All clients"}</button>
+    <div class="card" style="margin-top:16px">
+      <div class="admin-bar"><h2 style="margin:0;font-size:1.8rem">${esc(name)}</h2>
+        <span class="pill ${d.client ? "" : "grey"}">${d.client ? "Account" : "No account yet"}</span></div>
+      <p class="muted" style="margin:6px 0 0">${esc(d.email)}${phone ? ` · ${esc(phone)}` : ""}</p>
+      <div class="actions" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+        ${digits ? `<a class="btn sm forest" href="sms:${digits}">${icon("message")}Text</a><a class="btn sm outline" href="tel:${digits}">${icon("phone")}Call</a>` : ""}
+        <a class="btn sm outline" href="mailto:${esc(d.email)}">${icon("mail")}Email</a>
+      </div>
+      ${d.client ? "" : `<p class="alert" style="margin:18px 0 0">${icon("user")}<span>They haven't set up an account yet. They can log in at <strong>walksforlucy.com/account</strong> with ${esc(d.email)} to add their pets, vet and home details.</span></p>`}
+      ${d.client ? `<div class="info-grid">
+        ${info("Address", [c.address, c.zip].filter(Boolean).join(", "))}
+        ${info("Emergency contact", [c.emergency_name, c.emergency_phone].filter(Boolean).join(" · "))}
+        ${info("Vet", [c.vet_name, c.vet_phone].filter(Boolean).join(" · "))}
+      </div>${info("Getting in & house notes", c.home_notes)}` : ""}
+    </div>
+    ${d.pets.length ? `<h3 style="margin:28px 0 12px">Pets</h3><div class="grid pet-grid">${d.pets
+      .map(
+        (p) => `<div class="card">
+          <div class="pet-card-head" style="margin-bottom:8px"><span class="pet-badge">${icon(PETS[p.type]?.icon || "paw")}</span>
+            <span class="pet-title-wrap"><strong class="pet-title">${esc(p.name)}</strong><span class="muted small">${esc([PETS[p.type]?.label, p.breed, p.age].filter(Boolean).join(" · "))}</span></span></div>
+          ${info("Feeding", p.feeding)}${info("Medications", p.medications)}${info("Personality & habits", p.behavior)}${info("Anything else", p.notes)}
+          ${[p.feeding, p.medications, p.behavior, p.notes].some(Boolean) ? "" : `<p class="muted small">No details added yet.</p>`}
+        </div>`
+      )
+      .join("")}</div>` : ""}
+    <h3 style="margin:28px 0 12px">Booking requests</h3>
+    ${d.bookings.length ? `<div class="grid">${d.bookings
+      .map(
+        (b) => `<div class="card booking ${esc(b.status)}" style="padding:16px 20px">
+          <div class="admin-bar"><strong>${fmt(b.start_date)}${b.end_date !== b.start_date ? ` – ${fmt(b.end_date)}` : ""}</strong>
+            <span class="pill ${b.status === "pending" ? "clay" : b.status === "approved" ? "" : "grey"}">${STATUS_LABEL[b.status] || esc(b.status)}</span></div>
+          <p class="muted small" style="margin:6px 0 0">#${b.id} · ${describe(b)}${b.pet_types ? ` · ${esc(petSummary(b.pet_types.split(",")))}` : ""}</p>
+        </div>`
+      )
+      .join("")}</div>` : `<p class="muted">No booking requests yet.</p>`}`;
+}
+$("#client-detail").addEventListener("click", (e) => {
+  if (!e.target.closest("[data-back]")) return;
+  const back = $("#client-detail").dataset.back;
+  if (back) return showTab(back);
+  $("#client-detail").hidden = true;
+  $("#clients-list-wrap").hidden = false;
+});
+
 // ───────── Tabs ─────────
+function showTab(tab, load = true) {
+  document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+  $("#cal-view").hidden = tab !== "calendar";
+  $("#clients-view").hidden = tab !== "clients";
+  $("#list-view").hidden = tab === "calendar" || tab === "clients";
+  if (!load) return;
+  if (tab === "calendar") loadCalendar();
+  else if (tab === "clients") {
+    $("#client-detail").hidden = true;
+    $("#clients-list-wrap").hidden = false;
+    loadClients();
+  } else loadRequests((current = tab));
+}
 $("#tabs").addEventListener("click", (e) => {
-  const tab = e.target.dataset.tab;
-  if (!tab) return;
-  document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("active", b === e.target));
-  const cal = tab === "calendar";
-  $("#cal-view").hidden = !cal;
-  $("#list-view").hidden = cal;
-  if (cal) loadCalendar();
-  else loadRequests((current = tab));
+  const b = e.target.closest("button[data-tab]");
+  if (b) showTab(b.dataset.tab);
 });
 
 loadRequests(current);
