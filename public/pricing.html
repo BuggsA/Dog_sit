@@ -90,11 +90,12 @@
             <div class="form-section" id="visit-fields">
               <span class="label">Visit length</span>
               <div class="choices" id="minute-choices"></div>
+              <p class="muted small" id="min-note" style="margin:10px 0 0" hidden></p>
               <div class="row" style="margin-top:16px">
                 <div><label for="perDay">Visits per day</label><input type="number" id="perDay" min="1" max="6" value="2"></div>
                 <div><label for="days-v">Number of days</label><input type="number" id="days-v" min="1" max="60" value="3"></div>
               </div>
-              <label class="check" style="margin-top:14px"><input type="checkbox" id="feeding" checked> Visits include feeding</label>
+              <label class="check" style="margin-top:14px"><input type="checkbox" id="feeding"> Visits include feeding (30-minute minimum)</label>
             </div>
             <div class="form-section" id="overnight-fields" hidden>
               <span class="label">Guaranteed hours at home with your pet each day</span>
