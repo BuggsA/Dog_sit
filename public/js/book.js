@@ -1,4 +1,4 @@
-import { PETS, MAX_PETS, petSummary } from "./pricing.js";
+import { PETS, MAX_PETS, petSummary, minVisitFor } from "./pricing.js";
 import { classifyZip } from "./zones.js";
 import { icon } from "./site.js";
 
@@ -70,6 +70,20 @@ function refreshPets() {
   addBtn.hidden = all.length >= MAX_PETS;
   const kinds = all.map(kindOf).filter(Boolean);
   $("#pet-summary").textContent = kinds.length ? `Caring for ${petSummary(kinds)}.` : "";
+  syncMinutes();
+}
+
+// Grey out visit lengths that are too short for these pets (cats & small pets, or more than one pet)
+function syncMinutes() {
+  // Each card is one animal, even before its kind is picked
+  const pets = cards().map((c) => kindOf(c) || "dog");
+  const { minutes: min, reason } = minVisitFor(pets);
+  const sel = document.getElementById("minutes");
+  [...sel.options].forEach((o) => (o.disabled = Number(o.value) < min));
+  if (Number(sel.value) < min) sel.value = String(min);
+  const note = document.getElementById("min-note");
+  note.hidden = !reason;
+  note.textContent = reason;
 }
 
 addBtn.addEventListener("click", () => addPet("", true));
@@ -78,7 +92,8 @@ petList.addEventListener("change", refreshPets);
 
 // Prefill from the estimator
 const pre = (id) => { const el = document.getElementById(id); if (el) el.checked = true; };
-addPet(PETS[params.get("pet")] ? params.get("pet") : "");
+const prefill = params.getAll("pet").filter((p) => PETS[p]).slice(0, MAX_PETS);
+(prefill.length ? prefill : [""]).forEach((p) => addPet(p));
 if (params.get("service")) pre(`svc-${params.get("service")}`);
 if (params.get("zip")) $("#zip").value = params.get("zip");
 

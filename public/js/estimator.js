@@ -1,4 +1,4 @@
-import { VISITS, OVERNIGHTS, PETS, estimate, money } from "./pricing.js";
+import { VISITS, OVERNIGHTS, PETS, MAX_PETS, estimate, minVisitFor, petSummary, money } from "./pricing.js";
 import { classifyZip } from "./zones.js";
 import { icon } from "./site.js";
 
@@ -19,7 +19,31 @@ const chips = (el, name, items, checkedVal) =>
     )
     .join(""));
 
-chips("#pet-choices", "pet", Object.entries(PETS).map(([k, p]) => [k, p.label, p.icon]), "dog");
+// How many of each kind of pet (starts with one dog)
+const counts = Object.fromEntries(Object.keys(PETS).map((k) => [k, k === "dog" ? 1 : 0]));
+const petsList = () => Object.keys(PETS).flatMap((k) => Array(counts[k]).fill(k));
+$("#pet-choices").innerHTML = Object.entries(PETS)
+  .map(
+    ([k, p]) => `
+    <div class="pet-count" data-kind="${k}">
+      <span class="pet-count-name">${icon(p.icon)}${p.label}</span>
+      <div class="stepper sm">
+        <button type="button" data-step="-1" aria-label="One less ${p.noun}">${icon("minus")}</button>
+        <output aria-live="polite" aria-label="${p.plural}">0</output>
+        <button type="button" data-step="1" aria-label="One more ${p.noun}">${icon("plus")}</button>
+      </div>
+    </div>`
+  )
+  .join("");
+$("#pet-choices").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-step]");
+  if (!b) return;
+  const k = b.closest(".pet-count").dataset.kind;
+  const step = Number(b.dataset.step);
+  if (step > 0 && petsList().length >= MAX_PETS) return;
+  counts[k] = Math.max(0, counts[k] + step);
+  update();
+});
 chips("#svc-choices", "service", [["visit", "Walks & drop-ins", "leash"], ["overnight", "Overnights", "moon"]], "visit");
 chips("#minute-choices", "minutes", VISITS.map((v) => [v.minutes, `${v.label} · ${money(v.price)}`]), 30);
 chips("#hour-choices", "hours", OVERNIGHTS.map((o) => [o.hours, `${o.hours} hrs · ${money(o.price)}`]), 12);
@@ -28,18 +52,25 @@ const val = (name) => document.querySelector(`input[name="${name}"]:checked`)?.v
 
 function update() {
   const service = val("service");
-  const pet = val("pet");
+  const pets = petsList();
+  const total = pets.length;
+  document.querySelectorAll(".pet-count").forEach((row) => {
+    const n = counts[row.dataset.kind];
+    row.classList.toggle("on", n > 0);
+    row.querySelector("output").textContent = n;
+    row.querySelector('[data-step="-1"]').disabled = n === 0 || (n === 1 && total === 1);
+    row.querySelector('[data-step="1"]').disabled = total >= MAX_PETS;
+  });
+  $("#pet-total").textContent = total > 1 ? `Caring for ${petSummary(pets)}. Same price, however many pets.` : "";
   $("#visit-fields").hidden = service !== "visit";
   $("#overnight-fields").hidden = service !== "overnight";
-  $("#age-wrap").hidden = pet !== "dog";
+  $("#age-wrap").hidden = !counts.dog;
 
   const feeding = $("#feeding").checked;
-  const min = Math.max(PETS[pet].minVisit, feeding ? 30 : 0);
+  const { minutes: min, reason } = minVisitFor(pets, feeding);
   const note = $("#min-note");
   note.hidden = min <= 15;
-  note.textContent =
-    PETS[pet].minVisit > 15 ? `${PETS[pet].label} visits are at least 30 minutes.`
-    : "Visits with feeding are at least 30 minutes. Untick feeding for a quick 15-minute walk.";
+  note.textContent = reason + (feeding && total === 1 && PETS[pets[0]].minVisit <= 15 ? " Untick feeding for a quick 15-minute walk." : "");
   document.querySelectorAll('input[name="minutes"]').forEach((i) => {
     i.disabled = Number(i.value) < min;
     if (i.disabled && i.checked) document.getElementById("minutes-30").checked = true;
@@ -48,14 +79,14 @@ function update() {
   const zone = classifyZip($("#zip").value);
   const r = estimate({
     service,
-    pet,
+    pets,
     minutes: val("minutes"),
     hours: val("hours"),
     perDay: $("#perDay").value,
     days: service === "visit" ? $("#days-v").value : $("#days-o").value,
     feeding: $("#feeding").checked,
     zone,
-    ageFlag: pet === "dog" && $("#ageFlag").checked,
+    ageFlag: counts.dog > 0 && $("#ageFlag").checked,
   });
 
   if (r.contact) {
@@ -74,7 +105,9 @@ function update() {
   $("#est-zone").innerHTML = z ? `<div class="zone">${icon("pin")}<span>${z}</span></div>` : "";
   $("#est-warn").innerHTML = r.warnings.map((w) => `<div class="warn">${icon("sparkle")}<span>${w}</span></div>`).join("");
 
-  $("#est-book").href = `/book?${new URLSearchParams({ service, pet, zip: $("#zip").value })}`;
+  const q = new URLSearchParams({ service, zip: $("#zip").value });
+  pets.forEach((p) => q.append("pet", p));
+  $("#est-book").href = `/book?${q}`;
 }
 
 $("#est-form").addEventListener("input", update);
