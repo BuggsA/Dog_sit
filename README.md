@@ -33,6 +33,9 @@ Plain HTML/CSS/JS with no build step, so you can edit any page directly.
 | `schema.sql` | Database tables. New tables are created automatically by the Worker, so no manual step is needed after changes |
 | `src/reports.js` | Visit reports and their photos (stored privately in the R2 bucket `walks-for-lucy-photos`) |
 | `public/js/visits.js` | Visit report checklist, report cards, photo viewer and photo shrinking (shared by admin and client pages) |
+| `src/messages.js`, `src/bills.js` | Message threads and bills (shared by client and admin APIs) |
+| `public/js/portal.js` | Message thread and bill card display (shared by admin and client pages) |
+| `src/ics.js` | Calendar files: Anissa's subscribed phone calendar and clients' "Add to calendar" |
 | `src/clients.js` | Client accounts and pet profiles (shared by `/api/account` and the admin Clients tab) |
 
 ## Run it on your computer
@@ -83,6 +86,8 @@ Run the pricing tests with `npm test`.
 ## Changing things
 
 - **Prices:** edit `public/js/pricing.js`. The site, estimator and booking estimates all update.
+- **How clients pay:** edit `payNote` in `BUSINESS` at the top of `public/js/pricing.js` (e.g. add Anissa's Venmo username). It's shown on every client's Bills tab.
+- **Anissa's phone calendar:** Dashboard → Calendar → "Put your bookings on your phone". The link is private; "Make a new link" there turns the old one off.
 - **Service area:** the shaded map areas are real drive times from Reston on local roads (OpenStreetMap + Valhalla), clipped to Fairfax & Loudoun County, with nothing west of Aldie. To change the minutes or add ZIP codes, edit the top of `scripts/build-zones.mjs` and run `node scripts/build-zones.mjs`. It takes about a minute and is polite to the free map servers.
 - **Photos:** drop new ones into `public/img/`. Resize them to about 1000px wide and strip GPS location first.
 - **Lucy's photo:** save it as `public/img/lucy.jpg` and follow the note in `about.html`. Lucy's story there is a short draft for Anissa to personalize.
@@ -99,7 +104,8 @@ Pet photos in `public/img/stock/` are from [Unsplash](https://unsplash.com/licen
 - [x] Phase 1: site, estimator, map, booking requests → phone alerts, admin approve/decline + calendar
 - [x] Phase 2a: client logins (emailed code), pet profiles, contact/vet/home details, clients see their bookings, admin Clients tab
 - [x] Phase 2b: visit reports with checklist, notes & photos (R2 storage), shown in clients' accounts
-- [ ] Phase 2c: message threads, calendar of upcoming visits for clients, videos
-- [ ] Phase 2d: bills, with Anissa marking them paid
+- [x] Phase 2c: message threads, calendar downloads (Anissa's subscribed feed, clients' Add to calendar)
+- [x] Phase 2d: bills, with Anissa marking them paid
+- [ ] Later: email alerts to clients (new report, reply, bill), videos, recurring bookings, online card payments (Stripe)
 - [ ] Phase 3: online invoices/payments (Stripe), automatic reminders, reviews page
 - [ ] Spam protection with Cloudflare Turnstile if bots show up

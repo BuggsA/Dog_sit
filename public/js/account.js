@@ -66,6 +66,21 @@ function describe(b) {
   if (b.service === "visit") return `${b.per_day} × ${b.minutes}-minute visit${b.per_day > 1 ? "s" : ""} a day`;
   return "Meet & greet";
 }
+// Google Calendar "add event" link (works on Android phones and any browser)
+const plusDay = (d) => {
+  const t = new Date(d + "T12:00:00Z");
+  t.setUTCDate(t.getUTCDate() + 1);
+  return t.toISOString().slice(0, 10);
+};
+const googleCal = (b) =>
+  "https://calendar.google.com/calendar/render?" +
+  new URLSearchParams({
+    action: "TEMPLATE",
+    text: `Walks for Lucy: Anissa (${describe(b)})`,
+    dates: `${b.start_date.replace(/-/g, "")}/${plusDay(b.end_date).replace(/-/g, "")}`,
+    details: `${b.pets || ""}\nQuestions? Text Anissa at (541) 801-1068`.trim(),
+  });
+
 function bookingCard(b) {
   const [label, cls] = STATUS[b.status] || [b.status, ""];
   const types = (b.pet_types || "").split(",").filter(Boolean);
@@ -79,6 +94,9 @@ function bookingCard(b) {
       ${b.pets ? `<p class="muted small" style="margin:4px 0">${esc(b.pets)}</p>` : ""}
       ${b.notes ? `<p class="muted small" style="margin:4px 0">Your note: ${esc(b.notes)}</p>` : ""}
       <p class="muted small" style="margin:8px 0 0">Request #${b.id}${b.estimate != null ? ` · website estimate ${money(b.estimate)}` : ""}</p>
+      ${b.status === "approved" && b.end_date >= today ? `<div class="add-cal"><span class="muted small">Add to calendar:</span>
+        <a class="btn sm outline" href="/api/account/calendar?id=${b.id}">${icon("calendar")}iPhone / Outlook</a>
+        <a class="btn sm outline" href="${googleCal(b)}" target="_blank" rel="noopener">${icon("calendar")}Google / Android</a></div>` : ""}
     </article>`;
 }
 function renderBookings() {

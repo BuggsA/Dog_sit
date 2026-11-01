@@ -595,6 +595,38 @@ const loadBillCount = () =>
     })
     .catch(() => {});
 
+// ───────── Phone calendar subscription ─────────
+function showCalLink(url) {
+  $("#cal-url").value = url;
+  $("#cal-iphone").href = url.replace(/^https?:/, "webcal:");
+}
+async function loadCalLink() {
+  if ($("#cal-url").value) return;
+  try {
+    showCalLink((await api("/api/admin/calendar-link")).url);
+  } catch (e) {
+    $("#cal-url").value = e.message;
+  }
+}
+$("#cal-copy").onclick = async () => {
+  try {
+    await navigator.clipboard.writeText($("#cal-url").value);
+  } catch {
+    $("#cal-url").select();
+    document.execCommand("copy");
+  }
+  toast("Link copied");
+};
+$("#cal-reset").onclick = async () => {
+  if (!confirm("Make a new calendar link? Calendars subscribed with the old link will stop updating, and you'll need to subscribe again.")) return;
+  try {
+    showCalLink((await api("/api/admin/calendar-link", { method: "POST", body: { reset: true } })).url);
+    toast("New link ready");
+  } catch (e) {
+    toast(e.message);
+  }
+};
+
 // ───────── Tabs ─────────
 function showTab(tab, load = true) {
   document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
@@ -610,7 +642,10 @@ function showTab(tab, load = true) {
     $("#threads").hidden = false;
     loadThreads();
   } else if (tab === "bills") loadBills();
-  else if (tab === "calendar") loadCalendar();
+  else if (tab === "calendar") {
+    loadCalendar();
+    loadCalLink();
+  }
   else if (tab === "clients") {
     $("#client-detail").hidden = true;
     $("#clients-list-wrap").hidden = false;

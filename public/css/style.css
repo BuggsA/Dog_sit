@@ -545,3 +545,10 @@ legend { font-family: var(--serif); font-size: 1.3rem; color: var(--forest); mar
 .bill-line .dollar input { padding-left: 24px; }
 .small-tabs button { padding: 7px 12px; font-size: 0.88rem; }
 .no-fab .fab { display: none; }
+
+/* Calendar downloads */
+.h-xs { font-family: var(--sans); font-size: 0.95rem; font-weight: 700; color: var(--forest); margin: 18px 0 6px; }
+.copy-row { display: flex; gap: 8px; }
+.copy-row input { flex: 1; min-width: 0; font-size: 0.85rem; color: var(--muted); }
+.link-btn { background: none; border: 0; padding: 0; font: inherit; color: var(--clay-dark); text-decoration: underline; cursor: pointer; }
+.add-cal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }

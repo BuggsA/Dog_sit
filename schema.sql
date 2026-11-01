@@ -115,3 +115,9 @@ CREATE TABLE IF NOT EXISTS bills (
 );
 CREATE INDEX IF NOT EXISTS idx_bills_email ON bills(email, status);
 CREATE INDEX IF NOT EXISTS idx_bills_status ON bills(status, id);
+
+-- ───────── Small site settings (e.g. the secret calendar-feed link) ─────────
+CREATE TABLE IF NOT EXISTS settings (
+  key   TEXT PRIMARY KEY,
+  value TEXT
+);

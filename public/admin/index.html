@@ -135,6 +135,17 @@
         <div class="cal" id="cal"></div>
         <div id="day-detail" style="margin-top:20px"></div>
       </div>
+      <div class="card" id="cal-sync" style="margin-top:24px">
+        <h3 style="margin-top:0">Put your bookings on your phone</h3>
+        <p class="muted">Subscribe once and every confirmed booking (client, pets, address, phone, how to get in) and every blocked day shows up in your phone's calendar, updating by itself.</p>
+        <h4 class="h-xs">iPhone</h4>
+        <p><a class="btn sm forest" id="cal-iphone" href="#">Add to iPhone calendar</a></p>
+        <p class="muted small">Tap it on your iPhone, then tap <strong>Subscribe</strong>. If nothing happens: Settings → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar, and paste the link below.</p>
+        <h4 class="h-xs">Android (Google Calendar)</h4>
+        <p class="muted small">Google only lets you add it from a web browser: tap <strong>Copy link</strong>, open <a href="https://calendar.google.com/calendar/r/settings/addbyurl" target="_blank" rel="noopener">Google Calendar → From URL</a> (use "Desktop site" if your phone asks), paste it and tap <strong>Add calendar</strong>. Google can take a few hours to show new bookings.</p>
+        <div class="copy-row"><input id="cal-url" readonly aria-label="Your private calendar link"><button class="btn sm" id="cal-copy" type="button">Copy link</button></div>
+        <p class="muted small" style="margin-top:12px">Keep this link private: anyone with it can see your bookings. <button type="button" class="link-btn" id="cal-reset">Make a new link</button> (the old one stops working).</p>
+      </div>
     </section>
   </main>
 </body>
