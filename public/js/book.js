@@ -118,6 +118,7 @@ fetch("/api/account", { redirect: "manual" })
       refreshPets();
     }
     sync();
+    $("#login-hint").hidden = true;
     const note = $("#signed-in");
     note.hidden = false;
     note.innerHTML = `${icon("user")}<span>Signed in as <strong></strong>. We've filled in your details${acct.pets.length ? " and pets" : ""}. Remove any pets who don't need care this time.</span> <a href="/account/">My account</a>`;

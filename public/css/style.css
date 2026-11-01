@@ -477,3 +477,6 @@ legend { font-family: var(--serif); font-size: 1.3rem; color: var(--forest); mar
 .info > p { margin: 2px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .pet-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
 .pet-grid .card { padding: 20px; }
+.mobile-only { display: none; }
+@media (max-width: 1120px) { .nav-links .mobile-only { display: list-item; } }
+.client-email { overflow-wrap: anywhere; }

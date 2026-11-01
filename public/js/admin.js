@@ -186,8 +186,9 @@ function renderClients() {
         .map(
           (c) => `
       <button class="card client-card" data-client="${esc(c.email)}">
-        <span class="admin-bar"><strong class="client-name">${esc(c.name || c.email)}</strong>
+        <span class="admin-bar"><strong class="client-name">${c.name ? esc(c.name) : `<em class="muted">Name not added yet</em>`}</strong>
           <span class="pill ${c.client_id ? "" : "grey"}">${c.client_id ? "Account" : "No account yet"}</span></span>
+        <span class="muted small client-email">${esc(c.email)}</span>
         <span class="muted small">${esc([c.phone, c.town].filter(Boolean).join(" · "))}</span>
         ${c.pets.length ? `<span class="pet-chips">${petChips(c.pets)}</span>` : ""}
         <span class="muted small">${c.bookings} booking request${c.bookings === 1 ? "" : "s"}${c.pending ? ` · <strong style="color:var(--clay-dark)">${c.pending} waiting</strong>` : ""}</span>
@@ -218,13 +219,13 @@ async function openClient(email, fromRequests = false) {
     return;
   }
   const c = d.client || {};
-  const name = c.name || d.fromBookings?.name || d.email;
+  const name = c.name || d.fromBookings?.name;
   const phone = c.phone || d.fromBookings?.phone || "";
   const digits = esc(String(phone).replace(/[^\d+]/g, ""));
   box.innerHTML = `
     <button class="btn sm outline" data-back>‹ ${fromRequests ? "Back to requests" : "All clients"}</button>
     <div class="card" style="margin-top:16px">
-      <div class="admin-bar"><h2 style="margin:0;font-size:1.8rem">${esc(name)}</h2>
+      <div class="admin-bar"><h2 style="margin:0;font-size:1.8rem">${name ? esc(name) : `<em class="muted">Name not added yet</em>`}</h2>
         <span class="pill ${d.client ? "" : "grey"}">${d.client ? "Account" : "No account yet"}</span></div>
       <p class="muted" style="margin:6px 0 0">${esc(d.email)}${phone ? ` · ${esc(phone)}` : ""}</p>
       <div class="actions" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">

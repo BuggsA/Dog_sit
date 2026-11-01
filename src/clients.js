@@ -37,6 +37,7 @@ export const bookingsFor = async (env, email) =>
 
 export async function updateProfile(env, clientId, d) {
   const keys = Object.keys(PROFILE_FIELDS);
+  if (!text(d.name)) return "Please add your name";
   if (d.zip && !/^\d{5}$/.test(String(d.zip).trim())) return "Please use a 5-digit ZIP code";
   await env.DB.prepare(`UPDATE clients SET ${keys.map((k) => `${k} = ?`).join(", ")}, updated_at = datetime('now') WHERE id = ?`)
     .bind(...keys.map((k) => text(d[k], PROFILE_FIELDS[k])), clientId)

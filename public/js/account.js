@@ -174,14 +174,26 @@ function updatePetCount() {
   const n = document.querySelectorAll(".pet-profile[data-id]").length;
   $("#pet-count").hidden = !n;
   $("#pet-count").textContent = n;
+  updateNudge();
+}
+// One gentle prompt at a time: name & phone first, then pets
+function updateNudge() {
   const nudge = $("#nudge");
-  nudge.hidden = n > 0;
-  nudge.innerHTML = `${icon("paw")}<span><strong>Tell Anissa about your pets.</strong> Add their feeding, medications and habits once, and she'll have it for every visit. <a href="#pets" data-go="pets">Add your pets</a></span>`;
+  const c = data.client;
+  const pets = document.querySelectorAll(".pet-profile[data-id]").length;
+  if (!c.name || !c.phone) {
+    nudge.hidden = false;
+    nudge.innerHTML = `${icon("user")}<span><strong>Welcome! Start with your name and phone number</strong> so Anissa knows who you are. <a href="#details" data-go="details">Add my details</a></span>`;
+  } else if (!pets) {
+    nudge.hidden = false;
+    nudge.innerHTML = `${icon("paw")}<span><strong>Tell Anissa about your pets.</strong> Add their feeding, medications and habits once, and she'll have it for every visit. <a href="#pets" data-go="pets">Add your pets</a></span>`;
+  } else nudge.hidden = true;
 }
 $("#nudge").addEventListener("click", (e) => {
   if (e.target.dataset.go) {
     e.preventDefault();
     showTab(e.target.dataset.go);
+    if (e.target.dataset.go === "details") $("#d-name").focus();
   }
 });
 $("#add-my-pet").addEventListener("click", () => {
@@ -201,6 +213,11 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const msg = $("#details-msg");
   const body = Object.fromEntries(new FormData(form));
+  if (!body.name.trim()) {
+    msg.textContent = "Please add your name.";
+    $("#d-name").focus();
+    return;
+  }
   if (body.zip && !/^\d{5}$/.test(body.zip.trim())) {
     msg.textContent = "Please use a 5-digit ZIP code.";
     return;
@@ -214,6 +231,7 @@ form.addEventListener("submit", async (e) => {
     msg.textContent = "";
     toast("Details saved");
     greet();
+    updateNudge();
   } catch (err) {
     msg.textContent = err.message;
   } finally {
@@ -242,5 +260,6 @@ function greet() {
   updatePetCount();
   fillDetails();
   const want = location.hash.slice(1);
-  showTab(["bookings", "pets", "details"].includes(want) ? want : "bookings");
+  // Brand-new account: start on "My details" so they add their name first
+  showTab(["bookings", "pets", "details"].includes(want) ? want : data.client.name ? "bookings" : "details");
 })();
