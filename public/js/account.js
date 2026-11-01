@@ -1,5 +1,6 @@
 // Client "My account" page: bookings, pet profiles and contact details.
-import { PETS, petSummary, money } from "./pricing.js";
+import { PETS, BUSINESS, petSummary, money, dollars } from "./pricing.js";
+import { threadHTML, wireCompose, billHTML } from "./portal.js";
 import { icon } from "./site.js";
 import { reportHTML, enableLightbox } from "./visits.js";
 
@@ -44,6 +45,9 @@ function showTab(tab) {
   });
   document.querySelectorAll(".tab-panel").forEach((p) => (p.hidden = p.id !== `tab-${tab}`));
   history.replaceState(null, "", `#${tab}`);
+  // The floating "Text Anissa" button would cover the Send button
+  document.body.classList.toggle("no-fab", tab === "messages");
+  if (tab === "messages" && data) loadMessages(true).catch((e) => toast(e.message));
 }
 $("#tabs").addEventListener("click", (e) => {
   const b = e.target.closest("button[data-tab]");
@@ -105,6 +109,53 @@ async function loadReports() {
   }
 }
 enableLightbox($("#reports"));
+
+// ───────── Messages ─────────
+async function loadMessages(markRead = false) {
+  // Only open (and mark read) the thread when the Messages tab is showing
+  if (!markRead) {
+    const { unread } = await api("/api/account/messages?count=1");
+    $("#msg-count").hidden = !unread;
+    $("#msg-count").textContent = unread;
+    return;
+  }
+  const { messages } = await api("/api/account/messages");
+  const log = $("#chat-log");
+  log.innerHTML = threadHTML(messages, "client", "Anissa");
+  log.scrollTop = log.scrollHeight;
+  $("#msg-count").hidden = true;
+}
+wireCompose($("#chat-form"), async (body) => {
+  try {
+    await api("/api/account/messages", { method: "POST", body: { body } });
+    await loadMessages(true);
+  } catch (err) {
+    toast(err.message);
+    throw err;
+  }
+});
+// While the thread is open, check for Anissa's replies every 30 seconds
+setInterval(() => {
+  if (!$("#tab-messages").hidden && document.visibilityState === "visible") loadMessages(true).catch(() => {});
+}, 30000);
+
+// ───────── Bills ─────────
+async function loadBills() {
+  $("#pay-note").innerHTML = `${icon("bill")}<span>${BUSINESS.payNote}</span>`;
+  try {
+    const { bills } = await api("/api/account/bills");
+    const unpaid = bills.filter((b) => b.status === "unpaid");
+    $("#bill-count").hidden = !unpaid.length;
+    $("#bill-count").textContent = unpaid.length;
+    const owed = unpaid.reduce((s, b) => s + b.total, 0);
+    $("#bills").innerHTML = bills.length
+      ? (unpaid.length ? `<p class="bill-owed">You owe <strong>${dollars(owed)}</strong> on ${unpaid.length} bill${unpaid.length > 1 ? "s" : ""}.</p>` : `<p class="bill-owed">All paid up. Thank you!</p>`) +
+        bills.map((b) => billHTML(b)).join("")
+      : `<div class="card center"><p class="muted" style="margin:0">No bills yet. When Anissa sends one, it'll appear here.</p></div>`;
+  } catch (err) {
+    $("#bills").innerHTML = `<p class="muted">${esc(err.message)}</p>`;
+  }
+}
 
 // ───────── Pets ─────────
 const field = (pet, key, label, ph, rows) =>
@@ -281,6 +332,8 @@ function greet() {
   fillDetails();
   const want = location.hash.slice(1);
   // Brand-new account: start on "My details" so they add their name first
-  showTab(["bookings", "updates", "pets", "details"].includes(want) ? want : data.client.name ? "bookings" : "details");
+  showTab(["bookings", "updates", "messages", "bills", "pets", "details"].includes(want) ? want : data.client.name ? "bookings" : "details");
   loadReports();
+  loadBills();
+  if (want !== "messages") loadMessages().catch(() => {});
 })();

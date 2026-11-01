@@ -11,6 +11,17 @@ export const BUSINESS = {
   phone: "(541) 801-1068",
   phoneHref: "+15418011068",
   since: 2019,
+  // Shown on clients' bills. Add Anissa's Venmo / Zelle details here.
+  payNote: "Pay Anissa by Venmo, Zelle, cash or check. Please include the bill number so she can mark it paid.",
+};
+
+// Ways a bill can be paid (Anissa picks one when she marks it paid)
+export const PAY_METHODS = ["Cash", "Venmo", "Zelle", "Check", "Card", "Other"];
+
+/** $17 or $17.50 (bills always show a dollar amount, never "Free") */
+export const dollars = (n) => {
+  const v = Math.round(Number(n || 0) * 100) / 100;
+  return `${v < 0 ? "−" : ""}$${Math.abs(v).toFixed(Number.isInteger(v) ? 0 : 2)}`;
 };
 
 // Drop-in visits (walks, potty breaks, feeding, cat care…)

@@ -33,6 +33,8 @@
         <div class="tabs" id="tabs" role="tablist" style="margin:28px 0 20px">
           <button role="tab" data-tab="bookings" class="active"><svg class="i"><use href="/img/icons.svg#calendar"/></svg>Bookings</button>
           <button role="tab" data-tab="updates"><svg class="i"><use href="/img/icons.svg#camera"/></svg>Visit updates <span class="count" id="update-count" hidden></span></button>
+          <button role="tab" data-tab="messages"><svg class="i"><use href="/img/icons.svg#message"/></svg>Messages <span class="count" id="msg-count" hidden></span></button>
+          <button role="tab" data-tab="bills"><svg class="i"><use href="/img/icons.svg#bill"/></svg>Bills <span class="count" id="bill-count" hidden></span></button>
           <button role="tab" data-tab="pets"><svg class="i"><use href="/img/icons.svg#paw"/></svg>Pets <span class="count" id="pet-count" hidden></span></button>
           <button role="tab" data-tab="details"><svg class="i"><use href="/img/icons.svg#home"/></svg>My details</button>
         </div>
@@ -49,6 +51,23 @@
         <section id="tab-updates" class="tab-panel" hidden>
           <p class="muted" style="margin-top:0">After each visit, Anissa posts what she did, a note and photos here. Tap a photo to see it full size.</p>
           <div class="grid" id="reports"><p class="muted">Loading…</p></div>
+        </section>
+
+        <section id="tab-messages" class="tab-panel" hidden>
+          <div class="card chat">
+            <div class="chat-log" id="chat-log" aria-live="polite"></div>
+            <form class="chat-compose" id="chat-form">
+              <label for="chat-text" class="sr-only">Message to Anissa</label>
+              <textarea id="chat-text" rows="2" maxlength="4000" placeholder="Write to Anissa…"></textarea>
+              <button class="btn" type="submit">Send</button>
+            </form>
+          </div>
+          <p class="muted small" style="margin-top:10px">Anissa gets a notification on her phone. For anything urgent, <a href="sms:+15418011068">text</a> or <a href="tel:+15418011068">call</a> her at (541) 801-1068.</p>
+        </section>
+
+        <section id="tab-bills" class="tab-panel" hidden>
+          <div class="alert" id="pay-note" style="margin-bottom:20px"></div>
+          <div class="grid" id="bills"><p class="muted">Loading…</p></div>
         </section>
 
         <section id="tab-pets" class="tab-panel" hidden>

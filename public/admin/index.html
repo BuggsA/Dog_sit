@@ -29,6 +29,8 @@
         <button data-tab="declined"><svg class="i"><use href="/img/icons.svg#close"/></svg>Declined</button>
         <button data-tab="calendar"><svg class="i"><use href="/img/icons.svg#calendar"/></svg>Calendar</button>
         <button data-tab="clients"><svg class="i"><use href="/img/icons.svg#user"/></svg>Clients</button>
+        <button data-tab="messages"><svg class="i"><use href="/img/icons.svg#message"/></svg>Messages <span class="count" id="msg-count" hidden></span></button>
+        <button data-tab="bills"><svg class="i"><use href="/img/icons.svg#bill"/></svg>Bills <span class="count" id="bill-count" hidden></span></button>
       </div>
     </div>
 
@@ -44,6 +46,58 @@
       </div>
       <div id="client-detail" hidden></div>
     </section>
+
+    <section id="messages-view" hidden style="padding:20px 0">
+      <div class="grid" id="threads"></div>
+      <div id="thread-view" hidden>
+        <button class="btn sm outline" data-back-threads>‹ All messages</button>
+        <div class="admin-bar" style="margin:16px 0 12px"><h2 id="thread-name" style="margin:0;font-size:1.6rem"></h2>
+          <button class="btn sm outline" id="thread-profile">Profile &amp; pets</button></div>
+        <div class="card chat">
+          <div class="chat-log" id="admin-chat-log" aria-live="polite"></div>
+          <form class="chat-compose" id="admin-chat-form">
+            <label for="admin-chat-text" class="sr-only">Reply</label>
+            <textarea id="admin-chat-text" rows="2" maxlength="4000" placeholder="Write a reply…"></textarea>
+            <button class="btn" type="submit">Send</button>
+          </form>
+        </div>
+        <p class="muted small" style="margin-top:10px">They'll see your reply next time they open their account. For anything urgent, text them too.</p>
+      </div>
+    </section>
+
+    <section id="bills-view" hidden style="padding:20px 0">
+      <div class="admin-bar" style="margin-bottom:16px">
+        <p class="bill-owed" id="owed" style="margin:0"></p>
+        <div class="tabs small-tabs" id="bill-filter">
+          <button data-status="unpaid" class="active">To be paid</button>
+          <button data-status="paid">Paid</button>
+          <button data-status="">All</button>
+        </div>
+      </div>
+      <div class="grid" id="bill-list"></div>
+    </section>
+
+    <dialog id="bill-dialog" class="sheet" aria-labelledby="bill-title">
+      <form id="bill-form" novalidate>
+        <div class="admin-bar">
+          <h2 id="bill-title" style="margin:0;font-size:1.5rem">New bill</h2>
+          <button type="button" class="pet-remove" data-close aria-label="Close"><svg class="i"><use href="/img/icons.svg#close"/></svg></button>
+        </div>
+        <p class="muted small" id="bill-for" style="margin:4px 0 16px"></p>
+        <span class="label">What it's for</span>
+        <div id="bill-lines"></div>
+        <button type="button" class="btn sm outline" id="add-line" style="margin:4px 0 16px"><svg class="i"><use href="/img/icons.svg#plus"/></svg>Add a line</button>
+        <p class="bill-owed" style="margin:0 0 16px">Total: <strong id="bill-total">$0</strong></p>
+        <div class="row">
+          <div class="field"><label for="bill-due">Due date (optional)</label><input id="bill-due" type="date"></div>
+        </div>
+        <div class="field"><label for="bill-note">Note to the client (optional)</label><textarea id="bill-note" rows="2" maxlength="1000" placeholder="e.g. Thanks so much! Venmo @anissa works best."></textarea></div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+          <button class="btn" type="submit">Send bill</button>
+          <span class="muted" id="bill-msg" aria-live="polite"></span>
+        </div>
+      </form>
+    </dialog>
 
     <dialog id="report-dialog" class="sheet" aria-labelledby="report-title">
       <form id="report-form" novalidate>

@@ -12,6 +12,10 @@ import * as accountPets from "./api/account-pets.js";
 import * as accountReports from "./api/account-reports.js";
 import * as adminReports from "./api/admin-reports.js";
 import * as adminPhotos from "./api/admin-photos.js";
+import * as adminMessages from "./api/admin-messages.js";
+import * as adminBills from "./api/admin-bills.js";
+import * as accountMessages from "./api/account-messages.js";
+import * as accountBills from "./api/account-bills.js";
 
 const ROUTES = {
   "/api/requests": requests,
@@ -21,9 +25,13 @@ const ROUTES = {
   "/api/admin/clients": adminClients,
   "/api/admin/reports": adminReports,
   "/api/admin/photos": adminPhotos,
+  "/api/admin/messages": adminMessages,
+  "/api/admin/bills": adminBills,
   "/api/account": account,
   "/api/account/pets": accountPets,
   "/api/account/reports": accountReports,
+  "/api/account/messages": accountMessages,
+  "/api/account/bills": accountBills,
 };
 
 // GET → onRequestGet, POST → onRequestPost, …

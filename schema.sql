@@ -87,3 +87,31 @@ CREATE TABLE IF NOT EXISTS report_photos (
   created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_photos_report ON report_photos(report_id);
+
+-- ───────── Messages between Anissa and each client (one thread per client email) ─────────
+CREATE TABLE IF NOT EXISTS messages (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  email       TEXT    NOT NULL,   -- the client's thread (lowercase)
+  sender      TEXT    NOT NULL,   -- client | anissa
+  body        TEXT    NOT NULL,
+  read_at     TEXT,               -- when the other person opened it
+  created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_messages_email ON messages(email, id);
+
+-- ───────── Bills (clients pay Anissa directly; she marks them paid) ─────────
+CREATE TABLE IF NOT EXISTS bills (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  email       TEXT    NOT NULL,   -- the client (lowercase)
+  request_id  INTEGER,            -- the booking it's for, if any
+  lines       TEXT    NOT NULL,   -- JSON: [{"label": "...", "amount": 17}]
+  total       REAL    NOT NULL,
+  note        TEXT,
+  due_date    TEXT,               -- YYYY-MM-DD
+  status      TEXT    NOT NULL DEFAULT 'unpaid',   -- unpaid | paid | void
+  paid_at     TEXT,
+  paid_method TEXT,               -- Cash, Venmo, Zelle, Check, Card, Other
+  created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_bills_email ON bills(email, status);
+CREATE INDEX IF NOT EXISTS idx_bills_status ON bills(status, id);
