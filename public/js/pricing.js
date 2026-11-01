@@ -56,6 +56,25 @@ export function petSummary(types) {
 // Any visit that includes feeding must be at least this long
 export const FEEDING_MIN_MINUTES = 30;
 
+// Visits for more than one pet must be at least this long (the price doesn't change with the number of pets)
+export const MULTI_PET_MIN_MINUTES = 30;
+
+/**
+ * Shortest visit allowed for these pets (one entry per animal, e.g. ["dog","dog"]),
+ * plus a short reason to show when it's longer than 15 minutes.
+ */
+export function minVisitFor(pets, feeding = false) {
+  const list = pets.filter((p) => PETS[p]);
+  const strict = list.reduce((a, p) => (!a || PETS[p].minVisit > PETS[a].minVisit ? p : a), null);
+  const rules = [
+    [strict ? PETS[strict].minVisit : 15, strict && `${PETS[strict].label} visits are at least ${PETS[strict].minVisit} minutes.`],
+    [list.length > 1 ? MULTI_PET_MIN_MINUTES : 0, `Visits for more than one pet are at least ${MULTI_PET_MIN_MINUTES} minutes.`],
+    [feeding ? FEEDING_MIN_MINUTES : 0, `Visits with feeding are at least ${FEEDING_MIN_MINUTES} minutes.`],
+  ];
+  const minutes = Math.max(...rules.map((r) => r[0]));
+  return { minutes, reason: minutes > 15 ? rules.find((r) => r[0] === minutes)[1] : "" };
+}
+
 // Meet & greet before the first booking, by county (DC: ask Anissa)
 export const MEET_AND_GREET = { fairfax: 0, loudoun: 10 };
 
@@ -76,7 +95,8 @@ export const INCLUDED = [
 
 /**
  * Estimate a price.
- *   o.service "visit" | "overnight"; o.pet key of PETS; o.minutes; o.hours;
+ *   o.service "visit" | "overnight"; o.pets list of PETS keys, one per animal
+ *   (or o.pet for a single pet); o.minutes; o.hours;
  *   o.perDay; o.days; o.feeding; o.zone (classifyZip result); o.ageFlag
  */
 export function estimate(o) {
@@ -84,7 +104,8 @@ export function estimate(o) {
   const warnings = [];
   let total = 0;
   const days = Math.max(1, Number(o.days) || 1);
-  const pet = PETS[o.pet] || PETS.dog;
+  const pets = (Array.isArray(o.pets) && o.pets.length ? o.pets : [o.pet]).filter((p) => PETS[p]);
+  if (!pets.length) pets.push("dog");
   const zone = o.zone || null;
 
   if (o.ageFlag) {
@@ -103,9 +124,9 @@ export function estimate(o) {
     total += sub;
   } else {
     let minutes = Number(o.minutes) || 30;
-    const minRequired = Math.max(pet.minVisit, o.feeding ? FEEDING_MIN_MINUTES : 0);
+    const { minutes: minRequired, reason } = minVisitFor(pets, o.feeding);
     if (minutes < minRequired) {
-      warnings.push(`${pet.label} visits${o.feeding ? " with feeding" : ""} are at least ${minRequired} minutes, so we've adjusted the length.`);
+      warnings.push(`${reason.replace(/\.$/, "")}, so we've adjusted the length.`);
       minutes = minRequired;
     }
     const opt = VISITS.find((x) => x.minutes === minutes) || VISITS[1];

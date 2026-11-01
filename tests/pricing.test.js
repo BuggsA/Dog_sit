@@ -45,3 +45,22 @@ test("pet summary counts each animal", async () => {
   assert.equal(petSummary(["dog", "cat", "other", "other"]), "1 dog, 1 cat and 2 other pets");
   assert.equal(petSummary([]), "");
 });
+test("more than one pet: 30-minute minimum, same price", () => {
+  // One dog can have a 15-minute walk
+  assert.equal(estimate({ service: "visit", pets: ["dog"], minutes: 15, perDay: 1, days: 1 }).total, 10);
+  // Two dogs: bumped to 30 minutes, but not charged per pet
+  const two = estimate({ service: "visit", pets: ["dog", "dog"], minutes: 15, perDay: 1, days: 1 });
+  assert.equal(two.total, 17);
+  assert.match(two.warnings[0], /more than one pet/);
+  // Price doesn't change with the number of pets
+  assert.equal(estimate({ service: "visit", pets: ["dog", "dog", "cat"], minutes: 60, perDay: 1, days: 1 }).total, 30);
+  assert.equal(estimate({ service: "overnight", pets: ["dog", "cat", "bird"], hours: 12, days: 2 }).total, 120);
+});
+test("minVisitFor explains the minimum", async () => {
+  const { minVisitFor } = await import("../public/js/pricing.js");
+  assert.deepEqual(minVisitFor(["dog"]), { minutes: 15, reason: "" });
+  assert.equal(minVisitFor(["dog"], true).reason, "Visits with feeding are at least 30 minutes.");
+  assert.equal(minVisitFor(["cat"]).reason, "Cat visits are at least 30 minutes.");
+  assert.equal(minVisitFor(["dog", "dog"]).minutes, 30);
+  assert.equal(minVisitFor(["dog", "dog"]).reason, "Visits for more than one pet are at least 30 minutes.");
+});

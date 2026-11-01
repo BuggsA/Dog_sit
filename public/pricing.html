@@ -49,7 +49,7 @@
             <h2 style="font-size:1.7rem">Walks &amp; drop-in visits</h2>
             <p class="muted small">Within about a 20-minute drive of Reston</p>
             <table class="price-table" id="visit-prices"></table>
-            <div class="note"><svg class="i"><use href="/img/icons.svg#bowl"/></svg><span><strong>30-minute minimum</strong> for visits that include feeding, and for all cats &amp; small pets.</span></div>
+            <div class="note"><svg class="i"><use href="/img/icons.svg#bowl"/></svg><span><strong>30-minute minimum</strong> for visits that include feeding, for more than one pet, and for all cats &amp; small pets. The price is the same however many pets you have.</span></div>
           </div>
           <div class="card">
             <div class="icon-badge clay"><svg class="i"><use href="/img/icons.svg#moon"/></svg></div>
@@ -79,9 +79,11 @@
         <div class="est-grid">
           <form class="card" id="est-form" onsubmit="return false">
             <div class="form-section">
-              <span class="label">Your pet</span>
-              <div class="choices" id="pet-choices"></div>
-              <label class="check" id="age-wrap" style="margin-top:14px"><input type="checkbox" id="ageFlag"> My dog is under 1 year or over 14 years old</label>
+              <span class="label">Your pets</span>
+              <p class="muted small" style="margin:-4px 0 12px">Tap + for each pet. The price is the same however many you have.</p>
+              <div class="pet-counts" id="pet-choices"></div>
+              <p class="pet-summary" id="pet-total" aria-live="polite"></p>
+              <label class="check" id="age-wrap" style="margin-top:14px"><input type="checkbox" id="ageFlag"> A dog is under 1 year or over 14 years old</label>
             </div>
             <div class="form-section">
               <span class="label">Service</span>

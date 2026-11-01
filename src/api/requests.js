@@ -1,6 +1,6 @@
 // POST /api/requests: a client submits a booking request.
 import { json, notify, clean, isDate } from "../util.js";
-import { estimate, PETS, MAX_PETS, petSummary } from "../../public/js/pricing.js";
+import { estimate, minVisitFor, PETS, MAX_PETS, petSummary } from "../../public/js/pricing.js";
 import { classifyZip } from "../../public/js/zones.js";
 
 export async function onRequestPost({ request, env, waitUntil }) {
@@ -46,8 +46,8 @@ export async function onRequestPost({ request, env, waitUntil }) {
 
   const zone = classifyZip(zip);
   const days = Math.round((Date.parse(end) - Date.parse(start)) / 86400000) + (service === "overnight" ? 0 : 1);
-  // Cats & small pets need at least 30 min, so bump the length if needed
-  const petMin = Math.max(...petTypes.map((p) => PETS[p].minVisit));
+  // Cats & small pets, and more than one pet, need at least 30 min, so bump the length if needed
+  const petMin = minVisitFor(petTypes).minutes;
   const asked = [15, 30, 60].includes(Number(d.minutes)) ? Number(d.minutes) : 30;
   const minutes = Math.max(asked, petMin);
   const hours = [10, 12, 20, 24].includes(Number(d.hours)) ? Number(d.hours) : 12;
@@ -56,9 +56,8 @@ export async function onRequestPost({ request, env, waitUntil }) {
 
   let est = null;
   if (service !== "meet") {
-    // Price by the pet with the longest minimum visit (e.g. dog + cat → cat rules)
-    const pet = petTypes.slice().sort((a, b) => PETS[b].minVisit - PETS[a].minVisit)[0];
-    const r = estimate({ service, pet, minutes, hours, perDay, days: Math.max(1, days), feeding: false, zone, ageFlag });
+    // Same price however many pets; the pets only set the minimum visit length
+    const r = estimate({ service, pets: petTypes, minutes, hours, perDay, days: Math.max(1, days), feeding: false, zone, ageFlag });
     est = r.total;
   }
 

@@ -286,6 +286,19 @@ legend { font-family: var(--serif); font-size: 1.3rem; color: var(--forest); mar
 .stepper button:focus-visible { outline: 2px solid var(--forest); outline-offset: -2px; }
 .stepper button:disabled { opacity: 0.35; cursor: not-allowed; }
 
+.stepper.sm { border-radius: 10px; }
+.stepper.sm button { width: 36px; }
+.stepper.sm button .i { width: 16px; height: 16px; }
+.stepper output { min-width: 32px; display: grid; place-items: center; font-weight: 600; padding: 6px 2px; }
+
+/* Estimator: how many of each pet */
+.pet-counts { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+.pet-count { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 8px 8px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; transition: border-color 0.15s, background 0.15s; }
+.pet-count.on { border-color: var(--forest); background: var(--sage-soft); }
+.pet-count-name { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; min-width: 0; }
+.pet-count-name .i { width: 22px; height: 22px; color: var(--sage); }
+.pet-count.on .pet-count-name .i { color: var(--forest); }
+
 /* Booking form: one card per pet */
 .pet-list { display: grid; gap: 14px; margin-bottom: 14px; }
 .pet-card { border: 1.5px solid var(--line); border-radius: 16px; padding: 16px 18px 6px; background: var(--cream); transition: border-color 0.15s; }
