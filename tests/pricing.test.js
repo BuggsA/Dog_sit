@@ -38,3 +38,10 @@ test("zones", () => {
   assert.equal(classifyZip("90210").area, "outside");
   assert.equal(classifyZip("abc"), null);
 });
+test("pet summary counts each animal", async () => {
+  const { petSummary } = await import("../public/js/pricing.js");
+  assert.equal(petSummary(["dog"]), "1 dog");
+  assert.equal(petSummary(["cat", "dog", "dog"]), "2 dogs and 1 cat");
+  assert.equal(petSummary(["dog", "cat", "other", "other"]), "1 dog, 1 cat and 2 other pets");
+  assert.equal(petSummary([]), "");
+});

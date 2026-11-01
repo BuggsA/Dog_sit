@@ -274,6 +274,24 @@ fieldset { border: 0; padding: 0; margin: 0 0 8px; }
 legend { font-family: var(--serif); font-size: 1.3rem; color: var(--forest); margin-bottom: 14px; padding: 0; }
 .form-section + .form-section { border-top: 1px solid var(--line); padding-top: 24px; margin-top: 8px; }
 
+/* Booking form: one card per pet */
+.pet-list { display: grid; gap: 14px; margin-bottom: 14px; }
+.pet-card { border: 1.5px solid var(--line); border-radius: 16px; padding: 16px 18px 6px; background: var(--cream); transition: border-color 0.15s; }
+.pet-card.invalid { border-color: var(--clay); }
+.pet-card.invalid .pet-kind .label { color: var(--clay-dark); }
+.pet-card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.pet-badge { width: 38px; height: 38px; border-radius: 50%; background: var(--sage-soft); color: var(--forest); display: grid; place-items: center; flex: none; }
+.pet-badge .i { width: 22px; height: 22px; }
+.pet-title { flex: 1; min-width: 0; font-family: var(--serif); font-size: 1.15rem; color: var(--forest); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pet-remove { display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; border: 0; border-radius: 10px; background: none; color: var(--muted); font: inherit; font-size: 0.9rem; cursor: pointer; }
+.pet-remove .i { width: 16px; height: 16px; }
+.pet-remove:hover, .pet-remove:focus-visible { color: var(--clay-dark); background: var(--blush); outline: none; }
+.add-pet { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; border: 1.5px dashed var(--sage); border-radius: 16px; background: transparent; color: var(--forest); font: 600 1rem var(--sans); cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+.add-pet .i { width: 20px; height: 20px; }
+.add-pet:hover, .add-pet:focus-visible { background: var(--sage-soft); border-style: solid; outline: none; }
+.pet-summary { margin: 12px 0 0; color: var(--muted); font-size: 0.95rem; }
+.pet-summary:empty { display: none; }
+
 .est-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 28px; align-items: start; }
 @media (max-width: 900px) { .est-grid { grid-template-columns: 1fr; } }
 .estimate-box { background: var(--forest); color: #e9efe9; border-radius: var(--radius); padding: 30px; position: sticky; top: 100px; }

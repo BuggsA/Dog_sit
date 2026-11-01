@@ -60,9 +60,10 @@
 
             <fieldset class="form-section">
               <legend>Your pets</legend>
-              <div class="field"><span class="label">Who will I be caring for?</span><div class="choices" id="pet-types"></div></div>
-              <div class="field"><label for="pets">Names, breeds &amp; ages</label><input id="pets" placeholder="e.g. Biscuit, 5-year-old golden retriever; Mochi, 3-year-old tabby"></div>
-              <label class="check"><input type="checkbox" id="ageFlag"> A dog is under 1 year or over 14 years old (custom pricing)</label>
+              <p class="muted small" style="margin:-6px 0 14px">Add each pet I'll be caring for. More than one? Tap <strong>Add another pet</strong>.</p>
+              <div class="pet-list" id="pet-list"></div>
+              <button type="button" class="add-pet" id="add-pet"><svg class="i"><use href="/img/icons.svg#plus"/></svg><span>Add another pet</span></button>
+              <p class="pet-summary" id="pet-summary" aria-live="polite"></p>
             </fieldset>
 
             <fieldset class="form-section">
