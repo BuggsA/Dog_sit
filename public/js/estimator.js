@@ -8,7 +8,7 @@ $("#visit-prices").innerHTML = VISITS.map(
   (v) => `<tr><td><span class="name">${v.label}</span><small>${v.note}</small></td><td>${money(v.price)}</td></tr>`
 ).join("");
 $("#overnight-prices").innerHTML = OVERNIGHTS.map(
-  (o) => `<tr><td><span class="name">${o.label} with your pet</span><small>${o.note}</small></td><td>${money(o.price)}</td></tr>`
+  (o) => `<tr><td><span class="name">${o.hours < 24 ? "At least " : ""}${o.label} with your pet</span><small>${o.note}</small></td><td>${money(o.price)}</td></tr>`
 ).join("");
 
 const chips = (el, name, items, checkedVal) =>
