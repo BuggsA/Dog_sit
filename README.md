@@ -16,6 +16,8 @@ Plain HTML/CSS/JS with no build step, so you can edit any page directly.
 | `public/about.html` | About Anissa + Lucy's story |
 | `public/book.html` | Booking request form |
 | `public/faq.html` | Frequently asked questions |
+| `public/lucy.html` | Lucy's full story |
+| `public/dream.html` | Anissa's dream: a pet hotel or rescue for older dogs |
 | `public/admin/` | Anissa's dashboard: requests, approve/decline, calendar |
 | `public/js/pricing.js` | **All prices & rules. Edit prices here only.** |
 | `public/js/zones.js` | Service-area logic + map town labels |
