@@ -31,6 +31,8 @@ Plain HTML/CSS/JS with no build step, so you can edit any page directly.
 | `src/api/` | Server code: booking requests, availability, admin |
 | `wrangler.toml` | Cloudflare config (Worker name `dog-sit`) |
 | `schema.sql` | Database tables. New tables are created automatically by the Worker, so no manual step is needed after changes |
+| `src/reports.js` | Visit reports and their photos (stored privately in the R2 bucket `walks-for-lucy-photos`) |
+| `public/js/visits.js` | Visit report checklist, report cards, photo viewer and photo shrinking (shared by admin and client pages) |
 | `src/clients.js` | Client accounts and pet profiles (shared by `/api/account` and the admin Clients tab) |
 
 ## Run it on your computer
@@ -96,7 +98,8 @@ Pet photos in `public/img/stock/` are from [Unsplash](https://unsplash.com/licen
 
 - [x] Phase 1: site, estimator, map, booking requests → phone alerts, admin approve/decline + calendar
 - [x] Phase 2a: client logins (emailed code), pet profiles, contact/vet/home details, clients see their bookings, admin Clients tab
-- [ ] Phase 2b: visit reports with notes & photos (R2 storage), message threads, calendar of upcoming visits for clients
-- [ ] Phase 2c: bills, with Anissa marking them paid
+- [x] Phase 2b: visit reports with checklist, notes & photos (R2 storage), shown in clients' accounts
+- [ ] Phase 2c: message threads, calendar of upcoming visits for clients, videos
+- [ ] Phase 2d: bills, with Anissa marking them paid
 - [ ] Phase 3: online invoices/payments (Stripe), automatic reminders, reviews page
 - [ ] Spam protection with Cloudflare Turnstile if bots show up

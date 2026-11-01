@@ -45,6 +45,31 @@
       <div id="client-detail" hidden></div>
     </section>
 
+    <dialog id="report-dialog" class="sheet" aria-labelledby="report-title">
+      <form id="report-form" novalidate>
+        <div class="admin-bar">
+          <h2 id="report-title" style="margin:0;font-size:1.5rem">Visit report</h2>
+          <button type="button" class="pet-remove" data-close aria-label="Close"><svg class="i"><use href="/img/icons.svg#close"/></svg></button>
+        </div>
+        <p class="muted small" id="report-for" style="margin:4px 0 16px"></p>
+        <div class="row">
+          <div class="field"><label for="r-date">Date</label><input id="r-date" type="date" required></div>
+          <div class="field"><label for="r-time">Time (optional)</label><input id="r-time" placeholder="e.g. 8:15 AM" maxlength="20"></div>
+        </div>
+        <div class="field"><span class="label">What we did</span><div class="choices" id="r-done"></div></div>
+        <div class="field"><label for="r-notes">Notes</label><textarea id="r-notes" rows="4" maxlength="4000" placeholder="How the visit went: walk route, appetite, mood, anything to tell the family…"></textarea></div>
+        <div class="field"><span class="label">Photos</span>
+          <div class="photo-picks" id="r-previews"></div>
+          <label class="add-pet" for="r-photos" style="margin-top:10px"><svg class="i"><use href="/img/icons.svg#camera"/></svg><span>Add photos</span></label>
+          <input id="r-photos" type="file" accept="image/*" multiple hidden>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px">
+          <button class="btn" type="submit">Post report</button>
+          <span class="muted" id="r-msg" aria-live="polite"></span>
+        </div>
+      </form>
+    </dialog>
+
     <section id="cal-view" hidden style="padding:20px 0">
       <div class="card">
         <div class="admin-bar" style="margin-bottom:16px">

@@ -21,3 +21,9 @@ run_worker_first = ["/api/*", "/admin", "/admin/*", "/account", "/account/*"]
 binding = "DB"
 database_name = "walks-for-lucy"
 database_id = "efec6a94-df87-4d81-ac9a-0abca66ae56b"
+
+# ── Photo storage for visit reports (R2) ───────────────────────────────
+# Bucket created in the Cloudflare dashboard: R2 → walks-for-lucy-photos (private, no public access)
+[[r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "walks-for-lucy-photos"
