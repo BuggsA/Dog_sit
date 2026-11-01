@@ -18,7 +18,8 @@ Plain HTML/CSS/JS with no build step, so you can edit any page directly.
 | `public/faq.html` | Frequently asked questions |
 | `public/lucy.html` | Lucy's full story |
 | `public/dream.html` | Anissa's dream: a pet hotel or rescue for older dogs |
-| `public/admin/` | Anissa's dashboard: requests, approve/decline, calendar |
+| `public/admin/` | Anissa's dashboard: requests, approve/decline, calendar, clients |
+| `public/account/` | Clients' "My account": their bookings, pet profiles, contact/vet/home details |
 | `public/js/pricing.js` | **All prices & rules. Edit prices here only.** |
 | `public/js/zones.js` | Service-area logic + map town labels |
 | `public/js/zone-data.js` | Generated drive-time areas + ZIP codes (see below) |
@@ -29,7 +30,8 @@ Plain HTML/CSS/JS with no build step, so you can edit any page directly.
 | `src/worker.js` | Worker entry: routes `/api/*`, locks `/admin` |
 | `src/api/` | Server code: booking requests, availability, admin |
 | `wrangler.toml` | Cloudflare config (Worker name `dog-sit`) |
-| `schema.sql` | Database tables |
+| `schema.sql` | Database tables. New tables are created automatically by the Worker, so no manual step is needed after changes |
+| `src/clients.js` | Client accounts and pet profiles (shared by `/api/account` and the admin Clients tab) |
 
 ## Run it on your computer
 
@@ -65,7 +67,14 @@ Run the pricing tests with `npm test`.
      - `ACCESS_TEAM_DOMAIN` = `yourteam.cloudflareaccess.com`
      - `ACCESS_AUD` = the AUD tag
      - `ADMIN_EMAILS` = Anissa's email
-5. **Notifications to Anissa's phone.** `dog-sit` Worker → Settings → Variables and secrets (mark tokens as *Secret*). Pick one:
+5. **Client logins ("My account", free):** a second Access application, open to any email.
+   - Cloudflare One → Access controls → Applications → Add → *Self-hosted*. Name it `Walks for Lucy clients`.
+   - Destinations: `walksforlucy.com` with paths `account`, `account/*`, `api/account` **and** `api/account/*`.
+   - Authentication: only **One-time PIN**, with *Apply instant authentication* on.
+   - Policy: *Allow* → Include → **Everyone**. (Anyone can log in, but they only ever see the bookings and pets for the email they proved they own.)
+   - Copy this app's **AUD tag** and add it to the `dog-sit` Worker as `CLIENT_ACCESS_AUD`.
+   - The free plan covers 50 people at a time. In Cloudflare One's account settings, turn on removing inactive users from seats so past clients free up their seat.
+6. **Notifications to Anissa's phone.** `dog-sit` Worker → Settings → Variables and secrets (mark tokens as *Secret*). Pick one:
    - **Free and instant:** install the **ntfy** app on her phone, subscribe to a long random topic name, and set `NTFY_TOPIC` to that name.
    - **Real SMS:** with a Twilio account, set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` (your Twilio number) and `NOTIFY_TO=+15418011068`. US business texting needs A2P 10DLC registration in Twilio first (about 1–3 weeks).
 
@@ -86,6 +95,8 @@ Pet photos in `public/img/stock/` are from [Unsplash](https://unsplash.com/licen
 ## Roadmap
 
 - [x] Phase 1: site, estimator, map, booking requests → phone alerts, admin approve/decline + calendar
-- [ ] Phase 2: client logins (email magic link), pet profiles, message threads, visit photo/video galleries (R2 storage)
+- [x] Phase 2a: client logins (emailed code), pet profiles, contact/vet/home details, clients see their bookings, admin Clients tab
+- [ ] Phase 2b: visit reports with notes & photos (R2 storage), message threads, calendar of upcoming visits for clients
+- [ ] Phase 2c: bills, with Anissa marking them paid
 - [ ] Phase 3: online invoices/payments (Stripe), automatic reminders, reviews page
 - [ ] Spam protection with Cloudflare Turnstile if bots show up

@@ -28,11 +28,21 @@
         <button data-tab="approved"><svg class="i"><use href="/img/icons.svg#check"/></svg>Upcoming</button>
         <button data-tab="declined"><svg class="i"><use href="/img/icons.svg#close"/></svg>Declined</button>
         <button data-tab="calendar"><svg class="i"><use href="/img/icons.svg#calendar"/></svg>Calendar</button>
+        <button data-tab="clients"><svg class="i"><use href="/img/icons.svg#user"/></svg>Clients</button>
       </div>
     </div>
 
     <section id="list-view" style="padding:20px 0">
       <div class="grid" id="req-list"></div>
+    </section>
+
+    <section id="clients-view" hidden style="padding:20px 0">
+      <div id="clients-list-wrap">
+        <div class="field" style="max-width:420px"><label for="client-search">Find a client</label>
+          <input id="client-search" type="search" placeholder="Name, email, phone or pet" autocomplete="off"></div>
+        <div class="grid client-grid" id="clients-list"></div>
+      </div>
+      <div id="client-detail" hidden></div>
     </section>
 
     <section id="cal-view" hidden style="padding:20px 0">

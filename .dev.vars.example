@@ -1,5 +1,7 @@
 # Copy to .dev.vars for local development (never commit .dev.vars!)
 DEV_ADMIN_BYPASS=1
+# Pretend to be this client on /account (local only)
+DEV_CLIENT_EMAIL=test@example.com
 
 # Option A: free push notifications via the ntfy app (pick a long random topic name)
 # NTFY_TOPIC=walks-for-lucy-anissa-8f3k2q9z

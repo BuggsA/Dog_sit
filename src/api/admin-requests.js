@@ -3,12 +3,14 @@
 import { json, clean } from "../util.js";
 
 const STATUSES = ["pending", "approved", "declined", "done"];
+// client_id is set when the person has a "My account" profile (pets, vet, home notes…)
+const SELECT = "SELECT r.*, c.id AS client_id FROM requests r LEFT JOIN clients c ON c.email = lower(r.email)";
 
 export async function onRequestGet({ request, env }) {
   const status = new URL(request.url).searchParams.get("status");
   const stmt = STATUSES.includes(status)
-    ? env.DB.prepare("SELECT * FROM requests WHERE status = ? ORDER BY start_date ASC, id DESC LIMIT 200").bind(status)
-    : env.DB.prepare("SELECT * FROM requests ORDER BY id DESC LIMIT 200");
+    ? env.DB.prepare(`${SELECT} WHERE r.status = ? ORDER BY r.start_date ASC, r.id DESC LIMIT 200`).bind(status)
+    : env.DB.prepare(`${SELECT} ORDER BY r.id DESC LIMIT 200`);
   const { results } = await stmt.all();
   const counts = await env.DB.prepare("SELECT status, COUNT(*) AS n FROM requests GROUP BY status").all();
   return json({ requests: results, counts: Object.fromEntries(counts.results.map((r) => [r.status, r.n])) });

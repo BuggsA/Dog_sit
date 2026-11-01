@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My account · Walks for Lucy</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#2f4a3f">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..600,0..100,0..1;1,9..144,400..600,0..100,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/site.js"></script>
+  <script type="module" src="/js/account.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+  <main>
+    <section>
+      <div class="container account">
+        <div class="admin-bar">
+          <div>
+            <span class="eyebrow">My account</span>
+            <h1 id="hello" style="margin-bottom:4px">Welcome</h1>
+            <p class="muted small" style="margin:0"><span id="who"></span> · <a href="/cdn-cgi/access/logout">Log out</a></p>
+          </div>
+          <a class="btn" href="/book">Book a visit <svg class="i i-arrow"><use href="/img/icons.svg#arrow"/></svg></a>
+        </div>
+
+        <div class="alert" id="nudge" hidden style="margin-top:24px"></div>
+
+        <div class="tabs" id="tabs" role="tablist" style="margin:28px 0 20px">
+          <button role="tab" data-tab="bookings" class="active"><svg class="i"><use href="/img/icons.svg#calendar"/></svg>Bookings</button>
+          <button role="tab" data-tab="pets"><svg class="i"><use href="/img/icons.svg#paw"/></svg>Pets <span class="count" id="pet-count" hidden></span></button>
+          <button role="tab" data-tab="details"><svg class="i"><use href="/img/icons.svg#home"/></svg>My details</button>
+        </div>
+
+        <div id="loading" class="muted">Loading…</div>
+
+        <section id="tab-bookings" class="tab-panel" hidden>
+          <h2 class="h-sm">Coming up</h2>
+          <div class="grid" id="upcoming"></div>
+          <h2 class="h-sm" style="margin-top:36px">Past &amp; other requests</h2>
+          <div class="grid" id="past"></div>
+        </section>
+
+        <section id="tab-pets" class="tab-panel" hidden>
+          <p class="muted" style="margin-top:0">Anissa reads this before every visit. The more she knows about routines, food and quirks, the happier your pets will be.</p>
+          <div class="pet-list" id="my-pets"></div>
+          <button type="button" class="add-pet" id="add-my-pet"><svg class="i"><use href="/img/icons.svg#plus"/></svg><span>Add a pet</span></button>
+        </section>
+
+        <section id="tab-details" class="tab-panel" hidden>
+          <form class="card" id="details-form" novalidate>
+            <fieldset class="form-section">
+              <legend>Contact</legend>
+              <div class="row">
+                <div class="field"><label for="d-name">Your name</label><input id="d-name" name="name" autocomplete="name" maxlength="100"></div>
+                <div class="field"><label for="d-phone">Mobile phone</label><input id="d-phone" name="phone" type="tel" autocomplete="tel" maxlength="30"></div>
+              </div>
+              <div class="field"><label for="d-address">Home address</label><input id="d-address" name="address" autocomplete="street-address" maxlength="300"></div>
+              <div class="field" style="max-width:200px"><label for="d-zip">ZIP code</label><input id="d-zip" name="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code"></div>
+            </fieldset>
+            <fieldset class="form-section">
+              <legend>In an emergency</legend>
+              <div class="row">
+                <div class="field"><label for="d-ename">Emergency contact</label><input id="d-ename" name="emergency_name" maxlength="100" placeholder="Name"></div>
+                <div class="field"><label for="d-ephone">Their phone</label><input id="d-ephone" name="emergency_phone" type="tel" maxlength="30"></div>
+              </div>
+              <div class="row">
+                <div class="field"><label for="d-vet">Vet / clinic</label><input id="d-vet" name="vet_name" maxlength="150"></div>
+                <div class="field"><label for="d-vphone">Vet phone</label><input id="d-vphone" name="vet_phone" type="tel" maxlength="30"></div>
+              </div>
+            </fieldset>
+            <fieldset class="form-section">
+              <legend>Your home</legend>
+              <div class="field"><label for="d-home">Getting in &amp; house notes</label>
+                <textarea id="d-home" name="home_notes" rows="5" maxlength="2000" placeholder="Keys or lockbox code, alarm, parking, Wi-Fi, where the leash and food are kept, house rules…"></textarea>
+                <p class="muted small" style="margin:6px 0 0">Only you and Anissa can see this.</p></div>
+            </fieldset>
+            <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-top:8px">
+              <button class="btn" type="submit">Save my details</button>
+              <span class="muted" id="details-msg" aria-live="polite"></span>
+            </div>
+          </form>
+        </section>
+      </div>
+    </section>
+  </main>
+  <footer id="site-footer"></footer>
+</body>
+</html>

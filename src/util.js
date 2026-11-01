@@ -49,8 +49,9 @@ export async function notify(env, text, title = "Walks for Lucy") {
 // the Access rule is ever misconfigured.
 //
 // Env vars: ACCESS_TEAM_DOMAIN (e.g. "walksforlucy.cloudflareaccess.com"),
-//           ACCESS_AUD (Application Audience tag), ADMIN_EMAILS (comma separated)
-// Local dev only: DEV_ADMIN_BYPASS="1"
+//           ACCESS_AUD (Application Audience tag of the admin app), ADMIN_EMAILS (comma separated),
+//           CLIENT_ACCESS_AUD (AUD tag of the client "My account" app, open to any email)
+// Local dev only: DEV_ADMIN_BYPASS="1", DEV_CLIENT_EMAIL="someone@example.com"
 
 let certCache = { at: 0, keys: [] };
 
@@ -68,10 +69,10 @@ async function accessKeys(team) {
   return keys;
 }
 
-export async function adminEmail(request, env) {
-  if (env.DEV_ADMIN_BYPASS === "1") return "dev@localhost";
+/** The verified email from a Cloudflare Access login for the app with this AUD tag, or null. */
+async function accessEmail(request, env, audTag) {
   const token = request.headers.get("cf-access-jwt-assertion");
-  if (!token || !env.ACCESS_TEAM_DOMAIN || !env.ACCESS_AUD) return null;
+  if (!token || !env.ACCESS_TEAM_DOMAIN || !audTag) return null;
   try {
     const [h, p, sig] = token.split(".");
     const header = JSON.parse(new TextDecoder().decode(b64urlToBytes(h)));
@@ -82,17 +83,53 @@ export async function adminEmail(request, env) {
     const ok = await crypto.subtle.verify("RSASSA-PKCS1-v1_5", key, b64urlToBytes(sig), new TextEncoder().encode(`${h}.${p}`));
     if (!ok) return null;
     const aud = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
-    if (!aud.includes(env.ACCESS_AUD)) return null;
+    if (!aud.includes(audTag)) return null;
     if (payload.exp && payload.exp * 1000 < Date.now()) return null;
-    const allowed = (env.ADMIN_EMAILS || "").toLowerCase().split(",").map((s) => s.trim()).filter(Boolean);
-    const email = String(payload.email || "").toLowerCase();
-    if (allowed.length && !allowed.includes(email)) return null;
-    return email;
+    return String(payload.email || "").trim().toLowerCase() || null;
   } catch (e) {
     console.error("access verify failed", e);
     return null;
   }
 }
+
+/** Anissa (or another address in ADMIN_EMAILS), logged in through the admin Access app. */
+export async function adminEmail(request, env) {
+  if (env.DEV_ADMIN_BYPASS === "1") return "dev@localhost";
+  const email = await accessEmail(request, env, env.ACCESS_AUD);
+  if (!email) return null;
+  const allowed = (env.ADMIN_EMAILS || "").toLowerCase().split(",").map((s) => s.trim()).filter(Boolean);
+  return !allowed.length || allowed.includes(email) ? email : null;
+}
+
+/** A client, logged in through the "My account" Access app (any email, verified by a one-time code). */
+export async function clientEmail(request, env) {
+  if (env.DEV_CLIENT_EMAIL) return env.DEV_CLIENT_EMAIL.toLowerCase();
+  return accessEmail(request, env, env.CLIENT_ACCESS_AUD);
+}
+
+// ───────── Database tables ─────────
+// New tables are created automatically the first time the Worker talks to the
+// database, so a schema change never needs a manual step in the Cloudflare dashboard.
+import SCHEMA from "../schema.sql";
+
+let schemaReady = null;
+export function ensureSchema(env) {
+  if (!schemaReady) {
+    const statements = SCHEMA.replace(/--.*$/gm, "")
+      .split(";")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((s) => env.DB.prepare(s));
+    schemaReady = env.DB.batch(statements).catch((e) => {
+      schemaReady = null;
+      throw e;
+    });
+  }
+  return schemaReady;
+}
+
+/** Free text people type: trimmed, length-capped, null when empty. */
+export const text = (v, max = 500) => String(v ?? "").trim().slice(0, max) || null;
 
 export const clean = (v, max = 500) => String(v ?? "").trim().slice(0, max);
 export const isDate = (s) => /^\d{4}-\d{2}-\d{2}$/.test(s || "");
