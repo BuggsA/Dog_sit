@@ -9,6 +9,9 @@ import * as adminAvailability from "./api/admin-availability.js";
 import * as adminClients from "./api/admin-clients.js";
 import * as account from "./api/account.js";
 import * as accountPets from "./api/account-pets.js";
+import * as accountReports from "./api/account-reports.js";
+import * as adminReports from "./api/admin-reports.js";
+import * as adminPhotos from "./api/admin-photos.js";
 
 const ROUTES = {
   "/api/requests": requests,
@@ -16,8 +19,11 @@ const ROUTES = {
   "/api/admin/requests": adminRequests,
   "/api/admin/availability": adminAvailability,
   "/api/admin/clients": adminClients,
+  "/api/admin/reports": adminReports,
+  "/api/admin/photos": adminPhotos,
   "/api/account": account,
   "/api/account/pets": accountPets,
+  "/api/account/reports": accountReports,
 };
 
 // GET → onRequestGet, POST → onRequestPost, …

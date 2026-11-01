@@ -66,3 +66,24 @@ CREATE TABLE IF NOT EXISTS pets (
   updated_at  TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_pets_client ON pets(client_id);
+
+-- ───────── Visit reports: Anissa's notes & photos after each visit ─────────
+CREATE TABLE IF NOT EXISTS visit_reports (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  email       TEXT    NOT NULL,   -- the client's email (lowercase); this is who can see it
+  request_id  INTEGER,            -- the booking it belongs to, if any
+  visit_date  TEXT    NOT NULL,   -- YYYY-MM-DD
+  visit_time  TEXT,               -- e.g. "8:15 AM"
+  done        TEXT,               -- comma separated checklist: walk,fed,water,…
+  notes       TEXT,
+  created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_reports_email ON visit_reports(email, visit_date);
+
+CREATE TABLE IF NOT EXISTS report_photos (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  report_id   INTEGER NOT NULL REFERENCES visit_reports(id) ON DELETE CASCADE,
+  r2_key      TEXT    NOT NULL,   -- file in the walks-for-lucy-photos bucket
+  created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_photos_report ON report_photos(report_id);

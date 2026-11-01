@@ -1,6 +1,7 @@
 // Client "My account" page: bookings, pet profiles and contact details.
 import { PETS, petSummary, money } from "./pricing.js";
 import { icon } from "./site.js";
+import { reportHTML, enableLightbox } from "./visits.js";
 
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (s) =>
@@ -85,6 +86,25 @@ function renderBookings() {
     : `<div class="card center"><p class="muted" style="margin-bottom:14px">Nothing booked right now.</p><a class="btn sm" href="/book">Request a visit</a></div>`;
   $("#past").innerHTML = past.length ? past.map(bookingCard).join("") : `<p class="muted">Nothing here yet.</p>`;
 }
+
+// ───────── Visit updates ─────────
+async function loadReports() {
+  const box = $("#reports");
+  try {
+    const { reports } = await api("/api/account/reports");
+    box.innerHTML = reports.length
+      ? reports.map((r) => reportHTML(r, { photoUrl: (id) => `/api/account/reports?photo=${id}` })).join("")
+      : `<div class="card center"><p class="muted" style="margin:0">No visit updates yet. After each visit, Anissa's notes and photos will show up here.</p></div>`;
+    // Badge: updates from the last 3 days
+    const recent = new Date(Date.now() - 3 * 864e5).toISOString().slice(0, 10);
+    const n = reports.filter((r) => r.visit_date >= recent).length;
+    $("#update-count").hidden = !n;
+    $("#update-count").textContent = n;
+  } catch (err) {
+    box.innerHTML = `<p class="muted">${esc(err.message)}</p>`;
+  }
+}
+enableLightbox($("#reports"));
 
 // ───────── Pets ─────────
 const field = (pet, key, label, ph, rows) =>
@@ -261,5 +281,6 @@ function greet() {
   fillDetails();
   const want = location.hash.slice(1);
   // Brand-new account: start on "My details" so they add their name first
-  showTab(["bookings", "pets", "details"].includes(want) ? want : data.client.name ? "bookings" : "details");
+  showTab(["bookings", "updates", "pets", "details"].includes(want) ? want : data.client.name ? "bookings" : "details");
+  loadReports();
 })();

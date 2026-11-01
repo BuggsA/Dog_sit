@@ -32,6 +32,7 @@
 
         <div class="tabs" id="tabs" role="tablist" style="margin:28px 0 20px">
           <button role="tab" data-tab="bookings" class="active"><svg class="i"><use href="/img/icons.svg#calendar"/></svg>Bookings</button>
+          <button role="tab" data-tab="updates"><svg class="i"><use href="/img/icons.svg#camera"/></svg>Visit updates <span class="count" id="update-count" hidden></span></button>
           <button role="tab" data-tab="pets"><svg class="i"><use href="/img/icons.svg#paw"/></svg>Pets <span class="count" id="pet-count" hidden></span></button>
           <button role="tab" data-tab="details"><svg class="i"><use href="/img/icons.svg#home"/></svg>My details</button>
         </div>
@@ -43,6 +44,11 @@
           <div class="grid" id="upcoming"></div>
           <h2 class="h-sm" style="margin-top:36px">Past &amp; other requests</h2>
           <div class="grid" id="past"></div>
+        </section>
+
+        <section id="tab-updates" class="tab-panel" hidden>
+          <p class="muted" style="margin-top:0">After each visit, Anissa posts what she did, a note and photos here. Tap a photo to see it full size.</p>
+          <div class="grid" id="reports"><p class="muted">Loading…</p></div>
         </section>
 
         <section id="tab-pets" class="tab-panel" hidden>

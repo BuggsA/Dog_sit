@@ -1,4 +1,5 @@
 import { PETS, money, petSummary } from "./pricing.js";
+import { CHECKLIST, MAX_PHOTOS, reportHTML, enableLightbox, shrinkPhoto } from "./visits.js";
 const icon = (id) => `<svg class="i" aria-hidden="true"><use href="/img/icons.svg#${id}"/></svg>`;
 
 const $ = (s) => document.querySelector(s);
@@ -77,6 +78,7 @@ async function loadRequests(status) {
             ${r.status !== "approved" ? `<button class="btn sm" data-set="approved">Approve</button>` : `<button class="btn sm outline" data-set="done">Mark done</button>`}
             ${r.status !== "declined" ? `<button class="btn sm outline" data-set="declined">Decline</button>` : `<button class="btn sm outline" data-set="pending">Back to pending</button>`}
             <button class="btn sm outline" data-save>Save notes</button>
+            ${r.status === "approved" || r.status === "done" ? `<button class="btn sm forest" data-new-report data-email="${esc(r.email)}" data-request="${r.id}" data-name="${esc(r.name)}" data-start="${r.start_date}" data-end="${r.end_date}">${icon("camera")}Visit report</button>` : ""}
             <button class="btn sm outline" data-client="${esc(r.email)}">${icon("user")}${r.client_id ? "Pets &amp; profile" : "Client history"}</button>
           </div>
         </article>`;
@@ -92,6 +94,8 @@ $("#req-list").addEventListener("click", async (e) => {
   if (!card) return;
   const clientBtn = e.target.closest("[data-client]");
   if (clientBtn) return openClient(clientBtn.dataset.client, true);
+  const reportBtn = e.target.closest("[data-new-report]");
+  if (reportBtn) return openReportForm(reportBtn.dataset);
   const id = Number(card.dataset.id);
   const notes = card.querySelector("[data-notes]").value;
   try {
@@ -249,6 +253,9 @@ async function openClient(email, fromRequests = false) {
         </div>`
       )
       .join("")}</div>` : ""}
+    <div class="admin-bar" style="margin:28px 0 12px"><h3 style="margin:0">Visit reports</h3>
+      <button class="btn sm forest" data-new-report data-email="${esc(d.email)}" data-name="${esc(name || d.email)}">${icon("camera")}New visit report</button></div>
+    <div class="grid" id="client-reports"><p class="muted">Loading…</p></div>
     <h3 style="margin:28px 0 12px">Booking requests</h3>
     ${d.bookings.length ? `<div class="grid">${d.bookings
       .map(
@@ -259,13 +266,127 @@ async function openClient(email, fromRequests = false) {
         </div>`
       )
       .join("")}</div>` : `<p class="muted">No booking requests yet.</p>`}`;
+  loadClientReports(d.email);
 }
-$("#client-detail").addEventListener("click", (e) => {
+
+async function loadClientReports(email) {
+  const box = $("#client-reports");
+  if (!box) return;
+  try {
+    const { reports } = await api(`/api/admin/reports?email=${encodeURIComponent(email)}`);
+    box.innerHTML = reports.length
+      ? reports.map((r) => reportHTML(r, { photoUrl: (id) => `/api/admin/photos?id=${id}`, canDelete: true })).join("")
+      : `<p class="muted">No visit reports yet.</p>`;
+  } catch (e) {
+    box.innerHTML = `<p class="muted">${esc(e.message)}</p>`;
+  }
+}
+enableLightbox($("#client-detail"));
+$("#client-detail").addEventListener("click", async (e) => {
+  const newReport = e.target.closest("[data-new-report]");
+  if (newReport) return openReportForm(newReport.dataset);
+  const del = e.target.closest("[data-delete-report]");
+  if (del) {
+    if (!confirm("Delete this visit report and its photos? The client won't see it any more.")) return;
+    try {
+      await api("/api/admin/reports", { method: "DELETE", body: { id: Number(del.dataset.deleteReport) } });
+      del.closest(".report").remove();
+      toast("Report deleted");
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
   if (!e.target.closest("[data-back]")) return;
   const back = $("#client-detail").dataset.back;
   if (back) return showTab(back);
   $("#client-detail").hidden = true;
   $("#clients-list-wrap").hidden = false;
+});
+
+// ───────── Visit report form ─────────
+const dlg = $("#report-dialog");
+let reportCtx = null;
+let picked = []; // { blob, url }
+$("#r-done").innerHTML = CHECKLIST.map(
+  ([k, l, i]) => `<input type="checkbox" id="r-${k}" value="${k}"><label for="r-${k}">${icon(i)}${l}</label>`
+).join("");
+
+function openReportForm(ds) {
+  reportCtx = { email: ds.email, request_id: ds.request ? Number(ds.request) : null };
+  const today = ymd(new Date());
+  // Default to today during the booking, otherwise its first day
+  $("#r-date").value = ds.start && (today < ds.start || today > ds.end) ? ds.start : today;
+  $("#r-time").value = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  $("#r-notes").value = "";
+  document.querySelectorAll("#r-done input").forEach((i) => (i.checked = false));
+  picked.forEach((p) => URL.revokeObjectURL(p.url));
+  picked = [];
+  renderPicks();
+  $("#r-msg").textContent = "";
+  $("#report-for").textContent = `For ${ds.name || ds.email}${ds.request ? ` · booking #${ds.request}` : ""}. They'll see it in their account.`;
+  dlg.showModal();
+}
+function renderPicks() {
+  $("#r-previews").innerHTML = picked
+    .map((p, i) => `<div class="pick"><img src="${p.url}" alt=""><button type="button" data-unpick="${i}" aria-label="Remove photo">${icon("close")}</button></div>`)
+    .join("");
+  document.querySelector('label[for="r-photos"]').hidden = picked.length >= MAX_PHOTOS;
+}
+$("#r-photos").addEventListener("change", async (e) => {
+  const files = [...e.target.files].slice(0, MAX_PHOTOS - picked.length);
+  e.target.value = "";
+  $("#r-msg").textContent = files.length ? "Preparing photos…" : "";
+  for (const f of files) {
+    try {
+      const blob = await shrinkPhoto(f);
+      picked.push({ blob, url: URL.createObjectURL(blob) });
+      renderPicks();
+    } catch (err) {
+      toast(err.message);
+    }
+  }
+  $("#r-msg").textContent = "";
+});
+$("#r-previews").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-unpick]");
+  if (!b) return;
+  const [p] = picked.splice(Number(b.dataset.unpick), 1);
+  URL.revokeObjectURL(p.url);
+  renderPicks();
+});
+dlg.addEventListener("click", (e) => {
+  if (e.target.closest("[data-close]") || e.target === dlg) dlg.close();
+});
+$("#report-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = $("#r-msg");
+  const btn = $("#report-form button[type=submit]");
+  const done = [...document.querySelectorAll("#r-done input:checked")].map((i) => i.value);
+  const notes = $("#r-notes").value.trim();
+  if (!$("#r-date").value) return (msg.textContent = "Please pick the date.");
+  if (!done.length && !notes && !picked.length) return (msg.textContent = "Add a note, a photo or tick what you did.");
+  btn.disabled = true;
+  msg.textContent = "Posting…";
+  try {
+    const { id } = await api("/api/admin/reports", {
+      method: "POST",
+      body: { ...reportCtx, visit_date: $("#r-date").value, visit_time: $("#r-time").value, done, notes, photoCount: picked.length },
+    });
+    let failed = 0;
+    for (const [i, p] of picked.entries()) {
+      msg.textContent = `Uploading photo ${i + 1} of ${picked.length}…`;
+      const r = await fetch(`/api/admin/photos?report=${id}`, { method: "POST", headers: { "content-type": "image/jpeg" }, body: p.blob });
+      if (!r.ok) failed++;
+    }
+    dlg.close();
+    toast(failed ? `Posted, but ${failed} photo${failed > 1 ? "s" : ""} didn't upload` : "Visit report posted");
+    if (!$("#client-detail").hidden) loadClientReports(reportCtx.email);
+  } catch (err) {
+    msg.textContent = err.message;
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 // ───────── Tabs ─────────
