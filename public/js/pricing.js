@@ -32,13 +32,26 @@ export const MAX_HOURS_AWAY = 5; // never away from your pet longer than this du
 
 // Pet types: icon = id in /img/icons.svg; minVisit = shortest visit allowed (minutes)
 export const PETS = {
-  dog:       { label: "Dog",        icon: "dog",       minVisit: 15 },
-  cat:       { label: "Cat",        icon: "cat",       minVisit: 30 },
-  bird:      { label: "Bird",       icon: "bird",      minVisit: 30 },
-  guineapig: { label: "Guinea pig", icon: "guineapig", minVisit: 30 },
-  turtle:    { label: "Turtle",     icon: "turtle",    minVisit: 30 },
-  other:     { label: "Other",      icon: "paw",       minVisit: 30 },
+  dog:       { label: "Dog",        noun: "dog",        plural: "dogs",        icon: "dog",       minVisit: 15 },
+  cat:       { label: "Cat",        noun: "cat",        plural: "cats",        icon: "cat",       minVisit: 30 },
+  bird:      { label: "Bird",       noun: "bird",       plural: "birds",       icon: "bird",      minVisit: 30 },
+  guineapig: { label: "Guinea pig", noun: "guinea pig", plural: "guinea pigs", icon: "guineapig", minVisit: 30 },
+  turtle:    { label: "Turtle",     noun: "turtle",     plural: "turtles",     icon: "turtle",    minVisit: 30 },
+  other:     { label: "Other",      noun: "other pet",  plural: "other pets",  icon: "paw",       minVisit: 30 },
 };
+
+// Most pets one booking request can list
+export const MAX_PETS = 10;
+
+/** ["dog","dog","cat"] → "2 dogs and 1 cat" */
+export function petSummary(types) {
+  const counts = {};
+  for (const t of types) if (PETS[t]) counts[t] = (counts[t] || 0) + 1;
+  const parts = Object.keys(PETS)
+    .filter((k) => counts[k])
+    .map((k) => `${counts[k]} ${counts[k] > 1 ? PETS[k].plural : PETS[k].noun}`);
+  return parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}` : parts[0] || "";
+}
 
 // Any visit that includes feeding must be at least this long
 export const FEEDING_MIN_MINUTES = 30;

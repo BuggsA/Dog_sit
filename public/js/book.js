@@ -1,4 +1,4 @@
-import { PETS } from "./pricing.js";
+import { PETS, MAX_PETS, petSummary } from "./pricing.js";
 import { classifyZip } from "./zones.js";
 import { icon } from "./site.js";
 
@@ -6,9 +6,6 @@ const $ = (s) => document.querySelector(s);
 const form = $("#book-form");
 const params = new URLSearchParams(location.search);
 
-$("#pet-types").innerHTML = Object.entries(PETS)
-  .map(([k, p]) => `<input type="checkbox" name="petTypes" id="pt-${k}" value="${k}"><label for="pt-${k}">${icon(p.icon)}${p.label}</label>`)
-  .join("");
 $("#svc").innerHTML = [
   ["visit", "Walks & drop-ins", "leash"],
   ["overnight", "Overnights", "moon"],
@@ -17,9 +14,71 @@ $("#svc").innerHTML = [
   .map(([v, l, i], n) => `<input type="radio" name="service" id="svc-${v}" value="${v}"${n === 0 ? " checked" : ""}><label for="svc-${v}">${icon(i)}${l}</label>`)
   .join("");
 
+// ── Pets: one card per animal, add as many as needed ──
+const petList = $("#pet-list");
+const addBtn = $("#add-pet");
+let petSeq = 0;
+const cards = () => [...petList.querySelectorAll(".pet-card")];
+const kindOf = (card) => card.querySelector('input[type="radio"]:checked')?.value || "";
+
+function addPet(kind = "", focus = false) {
+  const id = ++petSeq;
+  const card = document.createElement("div");
+  card.className = "pet-card";
+  card.innerHTML = `
+    <div class="pet-card-head">
+      <span class="pet-badge">${icon("paw")}</span>
+      <strong class="pet-title"></strong>
+      <button type="button" class="pet-remove">${icon("close")}<span>Remove</span></button>
+    </div>
+    <div class="field pet-kind"><span class="label" id="pk-${id}">What kind of pet?</span>
+      <div class="choices" role="radiogroup" aria-labelledby="pk-${id}">${Object.entries(PETS)
+        .map(([k, p]) => `<input type="radio" name="kind-${id}" id="k-${id}-${k}" value="${k}"${k === kind ? " checked" : ""}><label for="k-${id}-${k}">${icon(p.icon)}${p.label}</label>`)
+        .join("")}</div></div>
+    <div class="row">
+      <div class="field"><label for="pn-${id}">Name</label><input id="pn-${id}" data-f="name" maxlength="60" autocomplete="off" placeholder="e.g. Biscuit"></div>
+      <div class="field"><label for="pd-${id}">Breed &amp; age</label><input id="pd-${id}" data-f="details" maxlength="120" autocomplete="off" placeholder="e.g. Golden retriever, 5 years"></div>
+    </div>
+    <label class="check pet-age" style="margin-bottom:12px" hidden><input type="checkbox" data-f="age"> Under 1 year or over 14 years old (custom pricing)</label>`;
+  card.querySelector(".pet-remove").addEventListener("click", () => {
+    const i = cards().indexOf(card);
+    card.remove();
+    refreshPets();
+    const left = cards();
+    (left[Math.min(i, left.length - 1)]?.querySelector(".pet-remove:not([hidden])") || addBtn).focus();
+  });
+  petList.append(card);
+  refreshPets();
+  if (focus) {
+    card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    card.querySelector('input[type="radio"]').focus({ preventScroll: true });
+  }
+}
+
+function refreshPets() {
+  const all = cards();
+  all.forEach((card, i) => {
+    const kind = kindOf(card);
+    const name = card.querySelector('[data-f="name"]').value.trim();
+    card.querySelector(".pet-title").textContent = name || (kind ? `${PETS[kind].label} ${all.length > 1 ? i + 1 : ""}`.trim() : `Pet ${i + 1}`);
+    card.querySelector(".pet-badge").innerHTML = icon(PETS[kind]?.icon || "paw");
+    card.querySelector(".pet-remove").hidden = all.length === 1;
+    card.querySelector(".pet-remove").setAttribute("aria-label", `Remove ${name || `pet ${i + 1}`}`);
+    card.querySelector(".pet-age").hidden = kind !== "dog";
+    if (kind) card.classList.remove("invalid");
+  });
+  addBtn.hidden = all.length >= MAX_PETS;
+  const kinds = all.map(kindOf).filter(Boolean);
+  $("#pet-summary").textContent = kinds.length ? `Caring for ${petSummary(kinds)}.` : "";
+}
+
+addBtn.addEventListener("click", () => addPet("", true));
+petList.addEventListener("input", refreshPets);
+petList.addEventListener("change", refreshPets);
+
 // Prefill from the estimator
 const pre = (id) => { const el = document.getElementById(id); if (el) el.checked = true; };
-if (params.get("pet")) pre(`pt-${params.get("pet")}`);
+addPet(PETS[params.get("pet")] ? params.get("pet") : "");
 if (params.get("service")) pre(`svc-${params.get("service")}`);
 if (params.get("zip")) $("#zip").value = params.get("zip");
 
@@ -59,10 +118,16 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const msg = $("#form-msg");
   const v = (id) => $(id).value.trim();
-  const petTypes = [...form.querySelectorAll('input[name="petTypes"]:checked')].map((i) => i.value);
+  const petCards = cards();
+  const pets = petCards.map((card) => ({
+    type: kindOf(card),
+    name: card.querySelector('[data-f="name"]').value.trim(),
+    details: card.querySelector('[data-f="details"]').value.trim(),
+    age: kindOf(card) === "dog" && card.querySelector('[data-f="age"]').checked,
+  }));
   const data = {
     name: v("#name"), phone: v("#phone"), email: v("#email"), zip: v("#zip"),
-    petTypes, pets: v("#pets"), ageFlag: $("#ageFlag").checked,
+    pets,
     service: service(), start: v("#start"), end: v("#end") || v("#start"),
     minutes: Number(v("#minutes")), perDay: Number(v("#perDay")), hours: Number(v("#hours")),
     notes: v("#notes"), newClient: $("#newClient").checked, consent: $("#consent").checked, website: v("#website"),
@@ -73,13 +138,17 @@ form.addEventListener("submit", async (e) => {
   if (!/\d{3}.*\d{3}.*\d{4}/.test(data.phone)) missing.push("a phone number");
   if (!/^\S+@\S+\.\S+$/.test(data.email)) missing.push("an email address");
   if (!/^\d{5}$/.test(data.zip)) missing.push("a 5-digit ZIP code");
-  if (!petTypes.length) missing.push("your type of pet");
+  const unpicked = petCards.filter((card) => !kindOf(card));
+  unpicked.forEach((card) => card.classList.add("invalid"));
+  if (unpicked.length)
+    missing.push(petCards.length === 1 ? "what kind of pet you have" : `the kind of pet for ${unpicked.map((c) => c.querySelector(".pet-title").textContent).join(", ")}`);
   if (!data.start) missing.push("a start date");
   if (data.end < data.start) missing.push("an end date after the start date");
   if (!data.consent) missing.push("permission to contact you");
   if (missing.length) {
     msg.textContent = `Please add ${missing.join(", ")}.`;
     msg.style.color = "var(--clay-dark)";
+    unpicked[0]?.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
 

@@ -192,6 +192,9 @@
   <path class="s" d="M8 14h32M8 24h32M8 34h22"/>
 </symbol>
 
+<symbol id="plus" viewBox="0 0 48 48">
+  <path class="s" d="M24 12v24M12 24h24"/>
+</symbol>
 <symbol id="close" viewBox="0 0 48 48">
   <path class="s" d="M12 12l24 24M36 12L12 36"/>
 </symbol>

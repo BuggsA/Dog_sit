@@ -1,4 +1,4 @@
-import { PETS, money } from "./pricing.js";
+import { money, petSummary } from "./pricing.js";
 const icon = (id) => `<svg class="i" aria-hidden="true"><use href="/img/icons.svg#${id}"/></svg>`;
 
 const $ = (s) => document.querySelector(s);
@@ -49,7 +49,8 @@ async function loadRequests(status) {
     }
     list.innerHTML = requests
       .map((r) => {
-        const pets = (r.pet_types || "").split(",").filter(Boolean).map((p) => PETS[p]?.label || p).join(", ");
+        const types = (r.pet_types || "").split(",").filter(Boolean);
+        const pets = petSummary(types) || types.join(", ");
         const phoneDigits = esc(String(r.phone).replace(/[^\d+]/g, ""));
         return `
         <article class="card req ${esc(r.status)}" data-id="${r.id}">
