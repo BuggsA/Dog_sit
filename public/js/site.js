@@ -11,6 +11,7 @@ const links = [
   ["/area", "Service Area"],
   ["/about", "About"],
   ["/lucy", "Lucy's Story"],
+  ["/dream", "The Dream"],
   ["/faq", "FAQ"],
 ];
 
