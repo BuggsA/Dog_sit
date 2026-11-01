@@ -31,7 +31,7 @@ if (header) {
     <div class="container">
       <span class="hide-sm">Full-time pet care since ${BUSINESS.since} · Now serving Fairfax &amp; Loudoun County</span>
       <span class="links">
-        <a href="/account/">${icon("user")} My account</a>
+        <a href="/account/">${icon("user")} Client login</a>
         <a href="tel:${BUSINESS.phoneHref}">${icon("phone")} ${BUSINESS.phone}</a>
       </span>
     </div>`;
@@ -44,6 +44,7 @@ if (header) {
       <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">${icon("menu")}</button>
       <ul class="nav-links" id="nav-links">
         ${links.map(([href, label]) => `<li><a href="${href}"${href === here ? ' aria-current="page"' : ""}>${label}</a></li>`).join("")}
+        <li class="mobile-only"><a href="/account/">Client login</a></li>
         <li><a class="btn sm" href="/book" style="color:#fff">Book a visit</a></li>
       </ul>
     </nav>`;
@@ -76,6 +77,7 @@ if (footer) {
             <li><a href="sms:${BUSINESS.phoneHref}">${icon("message")} Text ${BUSINESS.phone}</a></li>
             <li><a href="tel:${BUSINESS.phoneHref}">${icon("phone")} Call Anissa</a></li>
             <li><a href="/book">${icon("calendar")} Request a visit</a></li>
+            <li><a href="/account/">${icon("user")} Client login</a></li>
           </ul>
         </div>
       </div>
